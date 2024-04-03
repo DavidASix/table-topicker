@@ -63,7 +63,7 @@ export default async function handler(req, res) {
 
     // Generate random hex string for the magic link url
     const magicLinkUuid = uuid();
-    const magicUrl = `http://${DOMAIN}/api/auth/magic/${magicLinkUuid}`;
+    const magicUrl = `${DOMAIN}/api/auth/magic/${magicLinkUuid}`;
 
     // Insert magic link and user info into the collection
     const insertData = {
@@ -95,7 +95,7 @@ export default async function handler(req, res) {
       await axios.post(`${MG_URL}/messages`, content, mg_config);
       return res
         .status(200)
-        .json({ success: true, message: "Email Sent" });
+        .json({ success: true, message: "Email Sent", insertData });
     } catch (err) {
       console.log(err);
       return res
