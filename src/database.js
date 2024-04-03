@@ -9,9 +9,9 @@ const databases = {
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-let cached = global.mongo
+let cached = global.mongo;
 if (!cached) {
-  cached = global.mongo = { conn: null, promise: null }
+  cached = global.mongo = { connections: new Map(), promise: null };
 }
 
 export async function connectToDatabase(selectedDb) {
@@ -25,10 +25,7 @@ export async function connectToDatabase(selectedDb) {
   }
 
   if (!cached.promise) {
-    const opts = {
-      useNewUrlParser: true,
-      useUnifiedTopology : true
-    }
+    const opts = { useUnifiedTopology : true }
 
     cached.promise = MongoClient.connect(MONGODB_URI, opts).then((client) => {
       return {

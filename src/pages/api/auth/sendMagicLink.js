@@ -92,10 +92,10 @@ export default async function handler(req, res) {
 
     // Email the user the new code
     try {
-      await axios.post(`${MG_URL}/messages`, content, mg_config);
+      //await axios.post(`${MG_URL}/messages`, content, mg_config);
       return res
         .status(200)
-        .json({ success: true, message: "Email Sent", insertData });
+        .json({ success: true, message: "Email Sent" });
     } catch (err) {
       console.log(err);
       return res
