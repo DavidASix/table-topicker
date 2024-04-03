@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/database";
+import { connectToDatabase, disconnectFromDatabase } from "@/database";
 import createMagicLinkEmail from "@/utils/createMagicLinkEmail";
 
 import axios from "axios";
@@ -7,15 +7,15 @@ const { DOMAIN, MG_API_KEY, MG_URL, MG_DOMAIN } = process.env;
 
 /**
  * Sends a magic link for login to the user's email.
- * 
+ *
  * Request:
  * - method: POST
  * - body:
  *   - email (string): The email address of the user
- * 
+ *
  * Response:
  * - A JSON object with success status, message, and the inserted data
- * 
+ *
  * Example Response:
  * {
  *   success: true,
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
   try {
-    const { db } = await connectToDatabase("users");
+    const { conn, db } = await connectToDatabase("users");
     const magicLinkCol = db.collection("magic-links");
     const userCol = db.collection("users");
 
@@ -93,14 +93,14 @@ export default async function handler(req, res) {
     // Email the user the new code
     try {
       //await axios.post(`${MG_URL}/messages`, content, mg_config);
-      return res
-        .status(200)
-        .json({ success: true, message: "Email Sent" });
+      return res.status(200).json({ success: true, message: "Email Sent" });
     } catch (err) {
       console.log(err);
       return res
         .status(500)
         .json({ success: false, message: "Error sending email" });
+    } finally {
+      disconnectFromDatabase(conn);
     }
   } catch (err) {
     res.status(500).json({ message: `Server Error: ${err.message}` });
