@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { connectToDatabase } from "@/database";
 
-export const runtime = 'edge';
 
 export default async function handler(req, res) {
   const { db } = await connectToDatabase();
