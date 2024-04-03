@@ -20,8 +20,8 @@ export async function connectToDatabase(selectedDb) {
     throw new Error('Database does not exist');
   }
 
-  if (cached.conn) {
-    return cached.conn
+  if (cached.connections.has(selectedDb)) {
+    return cached.connections.get(selectedDb);
   }
 
   if (!cached.promise) {
@@ -37,6 +37,7 @@ export async function connectToDatabase(selectedDb) {
       }
     })
   }
-  cached.conn = await cached.promise
-  return cached.conn
+  const conn = await cached.promise;
+  cached.connections.set(selectedDb, conn);
+  return conn
 }
