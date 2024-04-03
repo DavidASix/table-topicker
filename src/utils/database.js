@@ -16,7 +16,7 @@ if (!cached) {
 
 export async function connectToDatabase(selectedDb) {
   const dbName = databases[selectedDb];
-  console.log(`Called DB for db ${selectedDb} : ${dbName}`)
+  //console.log(`Called DB for db ${selectedDb} : ${dbName}`)
 
   if (!dbName) {
     throw new Error('Database does not exist');
@@ -31,7 +31,7 @@ export async function connectToDatabase(selectedDb) {
 }
 
 export async function disconnectFromDatabase(conn) {
-  console.log('Disconnected from DB')
+  //console.log('Disconnected from DB')
   await conn.close();
   cached.conn = null;
 }

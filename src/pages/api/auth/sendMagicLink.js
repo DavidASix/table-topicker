@@ -1,4 +1,4 @@
-import { connectToDatabase, disconnectFromDatabase } from "@/database";
+import { connectToDatabase, disconnectFromDatabase } from "@/utils/database";
 import createMagicLinkEmail from "@/utils/createMagicLinkEmail";
 
 import axios from "axios";
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
       from: `Table Topicker <no-reply@${MG_DOMAIN}>`,
       to: email,
       subject: "Table Topicker Magic Link",
-      text: `Welcome to Table Topicker! Please click this link to log in: ${magicUrl}`,
+      text: `Welcome to Table Topicker! \nPlease click this link to log in: \n\n${magicUrl}`,
       html: createMagicLinkEmail(magicUrl),
     };
 
@@ -99,7 +99,7 @@ export default async function handler(req, res) {
         .status(500)
         .json({ success: false, message: "Error sending email" });
     }
-    
+
     // Disconnect from DB and send final response
     await disconnectFromDatabase(conn);
     return res.status(200).json({ success: true, message: "Email Sent" });

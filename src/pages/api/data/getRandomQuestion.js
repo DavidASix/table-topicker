@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/database";
+import { connectToDatabase, disconnectFromDatabase } from "@/utils/database";
 
 /**
  * Retrieves a random question from the database.
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
   try {
-    const { db } = await connectToDatabase("data");
+    const { conn, db } = await connectToDatabase("data");
     const coll = db.collection("questions");
 
     const randomQuestion = await coll
@@ -28,6 +28,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: "No questions found" });
     }
 
+	  await disconnectFromDatabase(conn);
     res.status(200).json(randomQuestion);
   } catch (err) {
     res.status(500).json({ message: `Server Error: ${err.message}` });

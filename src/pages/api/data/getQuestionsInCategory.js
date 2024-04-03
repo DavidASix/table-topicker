@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/database";
+import { connectToDatabase, disconnectFromDatabase } from "@/utils/database";
 
 /**
  * Retrieves a list of questions for a specific category.
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { db } = await connectToDatabase("data");
+    const { conn, db } = await connectToDatabase("data");
     const { category } = req.body;
 
     if (typeof category !== "string" || category.trim() === "") {
@@ -46,6 +46,7 @@ export default async function handler(req, res) {
         .json({ message: "No questions found for this category" });
     }
 
+	  await disconnectFromDatabase(conn);
     res.status(200).json(questions);
   } catch (err) {
     res.status(500).json({ message: `Server Error: ${err.message}` });

@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/database";
+import { connectToDatabase, disconnectFromDatabase } from "@/utils/database";
 
 /**
  * Validates a magic link and redirects the user to the home page if it's valid.
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 	}
   
 	try {
-	  const { db } = await connectToDatabase("users");
+	  const { conn, db } = await connectToDatabase("users");
 	  const collection = db.collection("magic-links");
   
 	  // Find magic link document
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
   
 	  // Check if the link has expired
 	  const currentTime = new Date().getTime() / 1000;
-	  if (magicLinkDoc.expireAt < currentTime) {
+	  if (magicLinkDoc.expireAt < currentTime || !magicLinkDoc.valid) {
 		return res.status(401).json({ error: 'Link has expired' });
 	  }
   
@@ -54,7 +54,10 @@ export default async function handler(req, res) {
 	  res.writeHead(302, {
 		Location: '/'
 	  });
+	  
+	  await disconnectFromDatabase(conn);
 	  res.end();
+
 	} catch (error) {
 	  res.status(500).json({ error: error.message });
 	}
