@@ -29,3 +29,9 @@ export async function connectToDatabase(selectedDb) {
     db: cached.conn.db(dbName),
   };
 }
+
+export async function disconnectFromDatabase(conn) {
+  console.log('Disconnected from DB')
+  await conn.close();
+  cached.conn = null;
+}

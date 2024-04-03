@@ -90,18 +90,19 @@ export default async function handler(req, res) {
       html: createMagicLinkEmail(magicUrl),
     };
 
-    // Email the user the new code
     try {
-      //await axios.post(`${MG_URL}/messages`, content, mg_config);
-      return res.status(200).json({ success: true, message: "Email Sent" });
+      // Email the user the new code
+      await axios.post(`${MG_URL}/messages`, content, mg_config);
     } catch (err) {
       console.log(err);
       return res
         .status(500)
         .json({ success: false, message: "Error sending email" });
-    } finally {
-      disconnectFromDatabase(conn);
     }
+    
+    // Disconnect from DB and send final response
+    await disconnectFromDatabase(conn);
+    return res.status(200).json({ success: true, message: "Email Sent" });
   } catch (err) {
     res.status(500).json({ message: `Server Error: ${err.message}` });
   }
