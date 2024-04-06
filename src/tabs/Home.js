@@ -148,7 +148,7 @@ function Home({className, id}) {
 
   return (
     <div className={`${className || ''} bg-slate-800
-    h-full w-screen flex flex-col border snap-center`}
+    h-full w-screen flex flex-col snap-center snap-always`}
     id={id || ''}>
       <div className="flex-1 flex flex-col items-center">
         <div className="w-screen min-h-40 flex flex-col justify-center items-center px-5 md:px-40">

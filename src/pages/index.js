@@ -8,8 +8,7 @@ function App() {
   const scrollRef = useRef(null)
   return (
     <div className="bg-slate-800 h-screen w-screen flex flex-col 
-    overflow-hidden
-    border-4 border-red-600">
+    overflow-hidden">
       <header className="w-screen h-16 flex justify-between items-center px-10">
         <span className="text-slate-300 font-light">Ghub</span>
         <span className="text-green-900 font-light">
@@ -18,8 +17,7 @@ function App() {
         <span className="text-slate-300 font-light">theme</span>
       </header>
       <main className="relative flex items-start flex-1 pb-10
-      overflow-x-scroll snap-mandatory snap-x
-      border border-blue-600"
+      overflow-x-scroll snap-mandatory snap-x"
       ref={scrollRef}>
         <Home className='z-10' />
         <Profile className='z-10' />
