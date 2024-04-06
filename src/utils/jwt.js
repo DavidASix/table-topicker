@@ -24,7 +24,7 @@ export const validateJWT = async (token) => {
     const { conn, db } = await connectToDatabase("users");
     const jwtCol = db.collection("jwt-blacklist");
     const expiredJWT = await jwtCol.findOne({ token });
-    disconnectFromDatabase(conn)
+    await disconnectFromDatabase(conn)
     if (expiredJWT) {
       throw new Error("JWT is blacklisted");
     }
@@ -43,7 +43,7 @@ export const invalidateJWT = async (token) => {
     // Add the JWT to the blacklist
     await jwtCol.insertOne({ token });
 
-    disconnectFromDatabase(conn)
+    await disconnectFromDatabase(conn)
     return true; // JWT invalidated successfully
   } catch (error) {
     console.error('Error invalidating JWT:', error);

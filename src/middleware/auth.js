@@ -17,24 +17,21 @@ import { validateJWT } from "@/utils/jwt";
 const auth = async (req, res, next) => {
   const token = req.cookies.jwt;
   console.log("Auth Middleware");
-  console.log(req.cookies.jwt.slice(0, 10));
   try {
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
     try {
-      console.log("in verify attempt");
       req.user = await validateJWT(token);
       req.authenticated = true
     } catch (error) {
-      console.log("tokenFailedVerification");
+      console.log("User Failed Authentication!");
       req.user = null;
       req.authenticated = null;
     }
-
   } catch (err) {
-    console.log(`Err: ${err.message}`);
+    console.log(`Auth Err: ${err.message}`);
   }
 };
 

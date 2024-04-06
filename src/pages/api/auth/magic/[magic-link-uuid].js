@@ -52,9 +52,9 @@ export default async function handler(req, res) {
     }
 	
     // Update document to set valid to false
-    await collection.updateOne(
+    await magicLinksCol.updateOne(
       { _id: magicLinkDoc._id },
-      { $set: { valid: false } }
+      { $set: { valid: true } }
     );
 
     const user = await userCol.findOne({ _id: magicLinkDoc.userId });
