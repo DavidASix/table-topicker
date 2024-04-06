@@ -1,5 +1,6 @@
 import { validateJWT } from "@/utils/jwt";
-
+import { connectToDatabase, disconnectFromDatabase } from "@/utils/database";
+import { ObjectId } from 'mongodb';
 /**
  * Authentication middleware that validates a JWT token and sets the 
  * req.user and req.authenticated properties.
@@ -23,7 +24,15 @@ const auth = async (req, res, next) => {
     }
 
     try {
-      req.user = await validateJWT(token);
+      const jwtUser = await validateJWT(token);
+      // Get the updated user document from the DB
+      const { conn, db } = await connectToDatabase("users");
+      const userCol = db.collection("users");
+      const id = new ObjectId(jwtUser._id)
+      req.user = await userCol.findOne({ _id: id})
+      
+      await disconnectFromDatabase(conn);
+      
       req.authenticated = true
     } catch (error) {
       console.log("User Failed Authentication!");
