@@ -4,15 +4,15 @@ import creditsCheck from "@/middleware/creditsCheck";
 import axios from "axios";
 
 const instructions = `You are the table topics master at a Toastmasters meeting. 
-You will receive the meetings theme, and you will respond with an interesting Table Topic prompt in the form of a question. 
-Each topic you send should be unique, DO NOT repeat topics from the conversation and DO NOT rephrase old questions.
-Your question should be between 15 to 75 characters, and end in a question mark.
-You should avoid using less common words, they words you use should be plain English.
-You will also receive a difficulty rating. This identifies how challenging of a question you should ask. 
-Any example of an easy question is "What is your favorite book?"
-An example of a hard question is "What does love mean to you?"
-The possible levels are:
-Easy, Medium, Hard, Very Hard`;
+You will receive a message like this: "MEETING THEME ~ DIFFICULTY RATING" and you will respond with an OPEN ENDED Table Topic question. 
+Each question should be unique, DO NOT repeat or rephrase previous questions.
+Questions MUST be centered around the meeting theme, and should be between 15 - 75 characters. They MUST end in a question mark.
+Avoid using less common words, use plain English.
+The difficulty rating identifies how challenging the question should be.
+The possible levels are: Easy, Medium, Hard
+EASY EXAMPLE: "What is your favorite book?"
+HARD EXAMPLE: "What's the biggest lesson failure taught you?"
+`;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -50,55 +50,64 @@ export default async function handler(req, res) {
   const questionsFromCategory = await questionHistoryColl
     .find({
       userId: req.user._id,
-      'question.category': category
+      "question.category": category,
     })
     .toArray();
-    
+
   // Generate table topic question
   try {
     // Previous prompts on this topic with this user are included
     // in the chat history to avoid repeating topics.
-    const questions = questionsFromCategory.map((q) => ({
-      role: "assistant",
-      content: q.question.question,
-    }));
 
-    const messages = [
+    const userPrompt = {
+      role: "user",
+      content: `${category} ~ Difficulty: ${difficulty}`,
+    };
+    const userQuestionHistory = questionsFromCategory.flatMap((q) => [
+      userPrompt,
+      {
+        role: "assistant",
+        content: q.question.question,
+      },
+    ]);
+
+    let messages = [
       {
         role: "system",
         content: instructions,
       },
-      ...questions,
-      {
-        role: "user",
-        content: `${category} ~ Difficulty: ${difficulty}`,
-      },
+      ...userQuestionHistory,
     ];
 
-    console.log(messages)
-
-    // TODO: Switch the n value to a while loop, adding the new response as
+    let topicOptions = [];
+    //While loop is used instead of Nvalue > 1 to add the new response as
     // a temporary vaue in messages array to avoid it being repeated
-    // Request data from Open AI
-    let { data } = await axios.post(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        model: "gpt-3.5-turbo",
-        max_tokens: 36,
-        temperature: 1.5,
-        n: 2,
-        messages,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`,
+    while (topicOptions.filter((v) => v.role === "assistant").length !== 2) {
+      // Request data from Open AI
+      let { data } = await axios.post(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          model: "gpt-3.5-turbo",
+          max_tokens: 36,
+          temperature: 1.5,
+          n: 1,
+          messages: [...messages, userPrompt, ...topicOptions],
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.OPEN_AI_API_KEY}`,
+          },
+        }
+      );
 
-    console.log(data.usage);
-    const topics = data.choices.map((c) => c.message.content);
+      topicOptions.push(data.choices[0].message);
+      topicOptions.push(userPrompt);
+    }
 
+    const topics = topicOptions
+      .filter((v) => v.role === "assistant")
+      .map((m) => m.content);
+      
     if (!topics.length) {
       return res.status(500).json({
         message: "Could not generate topic. You have not been charged.",
@@ -121,7 +130,7 @@ export default async function handler(req, res) {
         { statusCode: 500 }
       );
     }
-    await disconnectFromDatabase(userDb.conn)
+    await disconnectFromDatabase(userDb.conn);
     res.status(200).json({ topics: topics });
   } catch (err) {
     console.log(err);
