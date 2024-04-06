@@ -25,7 +25,7 @@ const Link = ({ index, scrollElement, scrollWidth, icon, title }) => {
         });
       }}
       className="h-14 w-14 flex justify-center items-center
-      bg-slate-300 rounded-xl group hover:scale-105 transition-all duration-200"
+      hover:bg-slate-200 rounded-full group hover:scale-105 transition-all duration-200"
     >
       {icon({
         size: 35,
@@ -48,8 +48,8 @@ export default function Button({ className, scrollElement }) {
   return (
     <nav
       className={`${className || ""} absolute bottom-2 left-0 right-0 mx-auto
-        flex justify-around items-center w-min space-x-3 px-1 py-1
-        bg-white shadow border rounded-2xl`}
+        flex justify-around items-center w-min space-x-6 md:space-x-3 px-2 md:px-1 py-1
+        bg-slate-100 shadow border rounded-2xl`}
     >
       {links.map((link, i) => (
         <Link

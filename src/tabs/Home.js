@@ -164,7 +164,7 @@ function Home({className, id}) {
         </div>
         <div
           className="flex-1 w-11/12 max-w-3xl flex flex-col items-center
-          bg-slate-200 rounded-t-[4rem] shadow-2xl"
+          bg-slate-200 rounded-t-[3rem] rounded-b-3xl shadow-2xl"
         >
           <div className="w-full min-h-16 py-3 flex justify-center items-center">
             <span className="hidden md:block font-light text-xl me-2">

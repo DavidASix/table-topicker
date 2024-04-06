@@ -17,7 +17,7 @@ function App() {
         </span>
         <span className="text-slate-300 font-light">theme</span>
       </header>
-      <main className="relative flex items-start flex-1
+      <main className="relative flex items-start flex-1 pb-10
       overflow-x-scroll snap-mandatory snap-x
       border border-blue-600"
       ref={scrollRef}>

@@ -5,7 +5,7 @@ function Profile({className, id}) {
     h-full w-screen flex flex-col border snap-center`}
     id={id || ''}>
       <div className="flex-1 flex flex-col items-center w-screen">
-        <h1 className="text-5xl">Profile</h1>
+        <h1 className="text-5xl text-white">Profile</h1>
       </div>
     </div>
   );
