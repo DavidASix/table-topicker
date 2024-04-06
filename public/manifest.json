@@ -1,11 +1,11 @@
 {
-  "short_name": "table-topicker",
-  "name": "Table Topicker",
+  "short_name": "Table Topicker",
+  "name": "Table Topicker | Table Topic Timer & Generator",
   "description": "A web app to create and time table topics.",
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#FF0000",
-  "background_color": "#00ffff",
+  "theme_color": "#688d99",
+  "background_color": "#242626",
   "icons": [
     {
       "src": "favicon.ico",

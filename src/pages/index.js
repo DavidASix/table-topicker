@@ -158,7 +158,7 @@ function App() {
       <div className="flex-1 flex flex-col items-center">
         <div className="w-screen min-h-40 flex flex-col justify-center items-center px-5 md:px-40">
           <h1 className="text-5xl text-slate-300 font-bold mb-3">
-            Table Topics
+            Table Topicker
           </h1>
           <p className=" text-slate-300 text-center font-light">
             Table Topics is a spontaneous speaking activity. Practice thinking
