@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect  } from "react";
 import Home from '@/tabs/Home'
 import Profile from '@/tabs/Profile'
-import Settings from '@/tabs/Settings'
+import History from '@/tabs/History'
 import TabNavigationBar from '@/components/TabNavigationBar';
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
       ref={scrollRef}>
         <Home className='z-10' />
         <Profile className='z-10' />
-        <Settings className='z-10' />
+        <History className='z-10' />
       </main>
         <TabNavigationBar className='z-20' scrollElement={scrollRef} />
     </div>
