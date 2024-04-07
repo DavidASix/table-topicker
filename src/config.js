@@ -1,3 +1,3 @@
 export const domain = process.env.NODE_ENV === "production"
-  ? "https://tabletopicker.davidasix.com"
+  ? "https://tabletopicker.com"
   : "http://localhost:3000";
