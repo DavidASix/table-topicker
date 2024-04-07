@@ -66,7 +66,10 @@ export default async function handler(req, res) {
 
     await disconnectFromDatabase(conn);
     // Redirect the user to the home page
-    res.redirect(302, "/protected").end();
+    // The first load after this redirect will not see the cookie,
+    // but all subsequent loads will. To mitigate this, the jwt is in the url as well
+    // js in the frontend will remove the jwt from the url after first page load
+    res.redirect(302, `/login-success?t=${jwt}`).end();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
