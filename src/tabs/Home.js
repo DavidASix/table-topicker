@@ -146,13 +146,17 @@ function Home({className, id}) {
 
   const timerColor = timerColorScheme[getTimerColor(timer)];
 
+  const contentContainer = `
+    relative h-full w-screen 
+    flex justify-center
+    px-2 md:px-4 lg:px-10 xl:px-20 2xl:px-52 py-2`;
   return (
-    <div className={`${className || ''} bg-slate-800
-    h-full w-screen flex flex-col snap-center snap-always`}
-    id={id || ''}>
-      <div className="flex-1 flex flex-col items-center">
-        <div className="w-screen min-h-40 flex flex-col justify-center items-center px-5 md:px-40">
-          <h1 className="text-5xl text-slate-300 font-bold mb-3">
+    <div className="h-full snap-center snap-always">
+      <div className={`${contentContainer} py-2`}>
+        <div className="max-w-[1000px] w-full h-full
+          flex flex-col
+          bg-white shadow-xl rounded-[3rem] p-4" >
+          <h1 className="text-5xl text-stone-900 text-center header-font mb-3">
             Table Topicker
           </h1>
           <p className=" text-slate-300 text-center font-light">
@@ -161,11 +165,6 @@ function Home({className, id}) {
             <br />
             Ready to become a better speaker?
           </p>
-        </div>
-        <div
-          className="flex-1 w-11/12 max-w-3xl flex flex-col items-center
-          bg-slate-200 rounded-t-[3rem] rounded-b-3xl shadow-2xl"
-        >
           <div className="w-full min-h-16 py-3 flex justify-center items-center">
             <span className="hidden md:block font-light text-xl me-2">
               Category:

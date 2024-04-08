@@ -19,7 +19,7 @@ const Link = ({
   currentIndex,
 }) => {
   const scrollDistance = scrollWidth * index;
-  const containerStyle = index === currentIndex ? "bg-orange-300" : "bg-slate-50 hover:bg-slate-200 scale-90";
+  const containerStyle = index === currentIndex ? "bg-orange-300" : "bg-slate-50 md:hover:bg-slate-200 scale-90";
   const iconStyle = index === currentIndex ? "fill-orange-950" : "fill-slate-700";
   return (
     <button
