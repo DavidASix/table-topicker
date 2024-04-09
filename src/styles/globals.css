@@ -5,10 +5,10 @@
 @layer base {
   * {
     font-size: inherit;
-    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-family: "Poppins", serif;
   }
   .header-font {
-    font-family: 'BANNER', sans-serif;
+    font-family: 'Overpass', serif;
     font-style: normal;
 
   }

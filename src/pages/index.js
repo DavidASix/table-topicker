@@ -26,20 +26,19 @@ function App({ user_str }) {
   return (
     <>
       <div
-        className=" bg-gradient-to-br from-slate-200 to-orange-300 
+        className=" bg-neutral-50 
         h-screen w-screen flex flex-col overflow-hidden"
       >
-        <header className="w-screen h-16 flex justify-between items-center px-10">
-          <span className="header-font text-4xl text-nowrap whitespace-nowrap text-gradient from-orange-950 to-orange-700 ">
+        <header className="w-screen h-16 flex justify-between items-center px-2 md:px-10">
+          <span className="header-font text-4xl font-extrabold text-nowrap whitespace-nowrap text-gradient from-orange-950 to-orange-700 ">
             Table Topicker
           </span>
           <div>
-            <span className="header-font text-2xl">Credits{` `}</span>
-            <span className="header-font text-2xl">Logout</span>
+            <span className="font-light text-xl">{user?.credits || 0} Credits</span>
           </div>
         </header>
         <main
-          className="relative flex items-start flex-1 pb-10
+          className="relative flex items-start flex-1 pb-16
               overflow-x-scroll snap-mandatory snap-x"
           ref={scrollRef}
         >

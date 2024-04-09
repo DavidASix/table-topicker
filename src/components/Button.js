@@ -6,8 +6,8 @@ export default function Button({ disabled, className, text, onClick }) {
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`text-slate-200 px-5 py-1 rounded-full 
-      text-2xl font-semibold appearance-none ${style}
+      className={`px-5 py-1 
+      text-2xl appearance-none ${style}
       transition-all duration-300`}
     >
       {text}

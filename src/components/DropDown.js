@@ -15,8 +15,8 @@ export default function DropDown({
     <div
       role='button'
       onClick={() => setIsOpen(!isOpen)}
-      className={`text-slate-100 px-5 py-1 rounded-full 
-      text-xl flex justify-center items-center relative  
+      className={` px-5 py-1
+      text-xl flex justify-between items-center relative  
       ${className ? className : ""}
       transition-all duration-300`}
     >

@@ -148,58 +148,46 @@ function Home({className, id}) {
 
   const contentContainer = `
     relative h-full w-screen 
-    flex justify-center
+    flex flex-col items-center
     px-2 md:px-4 lg:px-10 xl:px-20 2xl:px-52 py-2`;
   return (
     <div className="h-full snap-center snap-always">
       <div className={`${contentContainer} py-2`}>
-        <div className="max-w-[1000px] w-full h-full
-          flex flex-col
-          bg-white shadow-xl rounded-[3rem] p-4" >
-          <h1 className="text-5xl text-stone-900 text-center header-font mb-3">
-            Table Topicker
-          </h1>
-          <p className=" text-slate-300 text-center font-light">
-            Table Topics is a spontaneous speaking activity. Practice thinking
-            on your feet and having fun with words.
-            <br />
-            Ready to become a better speaker?
-          </p>
-          <div className="w-full min-h-16 py-3 flex justify-center items-center">
-            <span className="hidden md:block font-light text-xl me-2">
-              Category:
-            </span>
+        <div className="max-w-[1000px] w-full h-full flex flex-col" >
+        <p className=" text-xl py-1"><b>Table Topicker</b> is an AI tool to  help you get better at public speaking.  Practice thinking
+            on your feet and having fun with words.</p>
+          <div className="w-full min-h-16 py-1 flex justify-start items-center">
             <DropDown
-              className={"bg-slate-800 hover:bg-slate-700"}
+              className={"bg-white shadow-sm text-neutral-600 border flex-1 h-full rounded-2xl"}
               options={categories || []}
               selectedOption={category}
-              defaultText='Select a category'
+              defaultText='Topic Theme'
               loading={!categories}
               onOptionChange={(category) => setCategory(category)}
             />
           </div>
 
           <div className="w-full flex-1 flex flex-col">
-            <div className="w-full min-h-16 flex flex-row justify-center items-center">
               <span className="hidden md:block font-light text-xl me-2">
                 Times:
               </span>
+            <div className="w-full h-16 py-1 flex flex-row justify-center items-center space-x-2">
               <DropDown
-                className={"mb-3 md:mb-0 bg-green-900 hover:bg-green-800"}
+                className={"text-white bg-green-900 hover:bg-green-800 flex-1 h-full rounded-2xl"}
                 text="Green"
                 options={timingOptions}
                 selectedOption={green}
                 onOptionChange={(value) => setGreen(value)}
               />
               <DropDown
-                className={"mb-3 md:mb-0 mx-1 md:mx-3 bg-yellow-800 hover:bg-yellow-700"}
+                className={"text-white bg-yellow-800 hover:bg-yellow-700 flex-1 h-full rounded-2xl"}
                 text="Yellow"
                 options={timingOptions.filter((val, i) => val > green)}
                 selectedOption={yellow}
                 onOptionChange={(value) => setYellow(value)}
               />
               <DropDown
-                className={"mb-3 md:mb-0 bg-red-800 hover:bg-red-700"}
+                className={"text-white bg-red-800 hover:bg-red-700 flex-1 h-full rounded-2xl"}
                 text="Red"
                 options={timingOptions.filter((val, i) => val > yellow)}
                 selectedOption={red}
@@ -207,17 +195,18 @@ function Home({className, id}) {
               />
             </div>
 
-            <div className="w-full min-h-16 flex flex-col md:flex-row justify-center items-center">
+            <div className="w-full min-h-16 py-1 flex flex-col md:flex-row justify-center items-center">
               <Button
                 disabled={!category || topicLoadCounter}
                 text="Generate New Topic"
-                className={`me-1 mb-1 md:mb-0 ${!category || topicLoadCounter ? "bg-gray-400 text-gray-300" : "bg-teal-700 hover:bg-teal-600"}`}
+                className={`h-full w-full rounded-2xl text-2xl font-regular bg-opacity-80 hover:bg-opacity-95
+                ${!category || topicLoadCounter ? "bg-orange-400 text-white" : "bg-teal-700 hover:bg-teal-600"}`}
                 onClick={() => onClickGenerateTopic()}
               />
-
-              <div className="flex">
+            </div>
+            <div className="w-full min-h-16 py-1 space-x-2 flex  justify-center items-center">
                 <Button
-                  className="bg-zinc-600 hover:bg-zinc-500  mx-1 mb-1 md:mb-0"
+                  className="bg-zinc-600 hover:bg-zinc-500  w-full h-full rounded-2xl text-xl text-white"
                   text={
                     timerActive
                       ? "Pause"
@@ -230,10 +219,9 @@ function Home({className, id}) {
 
                 <Button
                   text={"Reset"}
-                  className="bg-red-800 hover:bg-red-700 ms-1 mb-1 md:mb-0"
+                  className="bg-red-800 hover:bg-red-700 w-full h-full rounded-2xl text-xl text-white"
                   onClick={() => onResetClick()}
                 />
-              </div>
             </div>
 
             <div
