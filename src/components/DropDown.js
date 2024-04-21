@@ -37,7 +37,7 @@ export default function DropDown({
       )}
       <div
         className={`
-          absolute z-10 min-w-32 flex flex-col top-[100%] mt-1
+          absolute z-10 min-w-32 flex flex-col bottom-[100%] mb-1
           rounded-2xl shadow-sm bg-white
           transition-all ease-in-out duration-300
           ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}

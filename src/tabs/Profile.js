@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 import { domain } from "@/config";
+import c from "@/assets/constants";
 
 function Profile({ className, user, userLoggedIn }) {
   //const user = JSON.parse(user_str);
@@ -39,46 +40,47 @@ function Profile({ className, user, userLoggedIn }) {
     </form>
   );
 
-  const contentContainer = `
-    relative h-full w-screen 
-    flex justify-center
-    px-2 md:px-4 lg:px-10 xl:px-20 2xl:px-52 py-2`;
   return (
     <div className="h-full snap-center snap-always">
-      <div className={`${contentContainer}`}>
-        <div className="max-w-[1000px] w-full h-full flex flex-col pt-20">
-          <div className="h-full flex flex-col border border-neutral-200
-          bg-white bg-opacity-60 backdrop-blur-3xl shadow-xl rounded-[3rem] py-4 px-8" >
-            <h1 className="-mt-24 -ms-4 md:ms-0 header-font text-start text-[5rem]
-            text-gradient from-neutral-950 to-neutral-600 uppercase">
-              Profile
-            </h1>
-        {user === false && <LoginForm />}
-        {user && (
-          <>
-            <div className="border-b border-neutral-500 px-2 py-4 w-full flex flex-col">
-              <span className="text-sm font-bold">Email:</span>
-              <span className="text-xl ms-4">
-                {user.email}
-              </span>
-            </div>
-            <div className="w-full flex justify-center space-x-4 py-4">
-              <button className="min-w-64 px-4 h-10 rounded-3xl
+      <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
+        <div
+          className={`${c.contentContainer} w-full h-full flex flex-col 
+          backdrop-blur-sm rounded-[2.5rem] py-4 border border-neutral-800`}
+        >
+          {user === false && <LoginForm />}
+          {user && (
+            <>
+              <div className="px-2 py-4 w-full flex flex-col">
+                <span className="text-white text-sm font-bold">Email:</span>
+                <span className="text-white text-xl ms-4">{user.email}</span>
+              </div>
+              <div className="w-full grid grid-cols-2 space-y-4 md:space-y-0">
+                <div className="flex justify-center items-center col-span-2 md:col-span-1">
+                <button
+                  className="min-w-64 px-4 h-10 rounded-3xl
                 text-lg font-light text-neutral-900
                 bg-white shadow hover:shadow-lg hover:scale-[1.01]
-                transition-all duration-300">
+                transition-all duration-300"
+                onClick={() => alert('Functionality not implemented, sorry!')}
+                >
                   Purchase Credits
-              </button>
-              <button className="min-w-64 px-4 h-10 rounded-3xl
+                </button>
+                </div>
+
+                <div className="flex justify-center items-center col-span-2 md:col-span-1">
+                <button
+                  className="min-w-64 px-4 h-10 rounded-3xl
                 text-lg font-light text-neutral-900
                 bg-white shadow hover:shadow-lg hover:scale-[1.01]
-                transition-all duration-300">
+                transition-all duration-300"
+                onClick={() => alert('Functionality not implemented, sorry!')}
+                >
                   Logout
-              </button>
-            </div>
-          </>
-        )}
-        </div>
+                </button>
+              </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

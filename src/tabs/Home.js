@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect  } from "react";
-import axios from 'axios';
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 
-import { domain } from '@/config'
+import { domain } from "@/config";
 import DropDown from "@/components/DropDown";
-import Button from "@/components/Button";
+import c from "@/assets/constants";
 
-function Home({className, id}) {
+function Home({ className, id }) {
   const [category, setCategory] = useState(false);
   const [categories, setCategories] = useState(false);
   const [currentTopic, setCurrentTopic] = useState(null);
-  const [topicHistory, setTopicHistory] = useState([])
+  const [topicHistory, setTopicHistory] = useState([]);
   // Topic load counter serves the purpose of counting how many attempts to find a unique
   // question have been completed, as well as being a loading new topic indicator (!!topicLoadCounter)
   const [topicLoadCounter, setTopicLoadCounter] = useState(null);
@@ -23,12 +23,12 @@ function Home({className, id}) {
   const interval = useRef(null);
 
   useEffect(() => {
-    const catURL = `${domain}/api/data/getCategories`
-    axios.get(catURL)
+    const catURL = `${domain}/api/data/getCategories`;
+    axios
+      .get(catURL)
       .then(({ data }) => setCategories(data))
-      .catch((err) => console.log(err))
-  }, [])
-
+      .catch((err) => console.log(err));
+  }, []);
 
   //const categories = ["Life", "Work", "School", "Family"];
   const timingOptions = [
@@ -44,28 +44,26 @@ function Home({className, id}) {
   // I had considered just updating the value of the color and using it as a variable within class names,
   // But that method does not trigger tailwinds to generate the required classes, so they are named explicitly here
   const timerColorScheme = {
-    zinc: {
-      text: "text-zinc-700",
-      ring: "ring-zinc-400",
-      bg: "bg-zinc-300",
+    inactive: {
+      text: "text-neutral-400",
+      bg: "transparent",
     },
     active: {
-      text: "text-sky-700",
-      ring: "ring-sky-200",
+      text: "text-sky-100",
       bg: "bg-sky-100",
     },
     green: {
-      text: "text-green-700",
+      text: "text-green-100",
       ring: "ring-green-400",
       bg: "bg-green-300",
     },
     yellow: {
-      text: "text-yellow-700",
+      text: "text-yellow-100",
       ring: "ring-yellow-300",
       bg: "bg-yellow-200",
     },
     red: {
-      text: "text-red-800",
+      text: "text-red-100",
       ring: "ring-red-500",
       bg: "bg-red-400",
     },
@@ -83,12 +81,11 @@ function Home({className, id}) {
   function getTimerColor(seconds) {
     const t = formatTime(seconds);
     let color = "";
-    if (t < green) {
-      if (timerActive) {
-        color = "active"
-      } else {
-        color = "zinc";
-      }
+
+    if (!timerActive) {
+      color = "inactive";
+    } else if (t < green) {
+      color = "active";
     } else if (t < yellow) {
       color = "green";
     } else if (t < red) {
@@ -101,7 +98,7 @@ function Home({className, id}) {
 
   async function onClickGenerateTopic() {
     if (!category) {
-      return alert('Please select a category');
+      return alert("Please select a category");
     }
     // if (currentTopic) {
     //   setTopicHistory([...topicHistory, {...currentTopic, timer}])
@@ -112,13 +109,13 @@ function Home({className, id}) {
     //   return alert('Could not find more topics for this category, please select a new one!')
     // }
     try {
-      const url = `${domain}/api/data/getRandomQuestionInCategory`
-      const { data } = await axios.post(url, {category})
+      const url = `${domain}/api/data/getRandomQuestionInCategory`;
+      const { data } = await axios.post(url, { category });
       setCurrentTopic(data);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     } finally {
-      setTopicLoadCounter(null)
+      setTopicLoadCounter(null);
     }
   }
 
@@ -145,49 +142,69 @@ function Home({className, id}) {
   }
 
   const timerColor = timerColorScheme[getTimerColor(timer)];
-
-  const contentContainer = `
-    relative h-full w-screen 
-    flex flex-col items-center
-    px-2 md:px-4 lg:px-10 xl:px-20 2xl:px-52 py-2`;
   return (
     <div className="h-full snap-center snap-always">
-      <div className={`${contentContainer} py-2`}>
-        <div className="max-w-[1000px] w-full h-full flex flex-col" >
-        <p className=" text-xl py-1"><b>Table Topicker</b> is an AI tool to  help you get better at public speaking.  Practice thinking
-            on your feet and having fun with words.</p>
-          <div className="w-full min-h-16 py-1 flex justify-start items-center">
+      <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
+        <div
+          className={`${c.contentContainer} w-full h-full flex flex-col rounded-[2.5rem] py-4
+          transition-all duration-500 ${timerColor.bg} bg-opacity-35`}
+        >
+          <div
+            className={`flex-1 flex flex-col justify-center items-center mx-3 my-3 mb-6
+              transition-all duration-500`}
+          >
+            <span className="text-white font-semibold">
+              {!category
+                ? "Select a category"
+                : !currentTopic?.question
+                ? "Generate a new topic"
+                : "Your Topic"}
+            </span>
+            <span className="max-w-[800px] text-center text-4xl md:text-7xl font-normal text-white">
+              {currentTopic?.question || ""}
+            </span>
+          </div>
+
+          <div className="w-full h-min flex flex-col items-center space-y-2 py-2">
+
+          <span
+              className={`text-3xl font-semibold transition-colors duration-500 ${timerColor.text}`}
+            >
+              {formatTime(timer)}
+            </span>
             <DropDown
-              className={"bg-white shadow-sm text-neutral-600 border flex-1 h-full rounded-2xl"}
+              className={
+                "bg-white shadow-sm text-neutral-600 h-14 w-full rounded-full"
+              }
               options={categories || []}
               selectedOption={category}
-              defaultText='Topic Theme'
+              defaultText="Topic Theme"
               loading={!categories}
               onOptionChange={(category) => setCategory(category)}
             />
-          </div>
-
-          <div className="w-full flex-1 flex flex-col">
-              <span className="hidden md:block font-light text-xl me-2">
-                Times:
-              </span>
-            <div className="w-full h-16 py-1 flex flex-row justify-center items-center space-x-2">
+            <div className="w-full h-min py-1 flex flex-row justify-center items-center space-x-2">
               <DropDown
-                className={"text-white bg-green-900 hover:bg-green-800 flex-1 h-full rounded-2xl"}
+                className={
+                  "text-white bg-green-900 hover:bg-green-800 flex-1 h-10 rounded-full"
+                }
                 text="Green"
                 options={timingOptions}
                 selectedOption={green}
                 onOptionChange={(value) => setGreen(value)}
               />
               <DropDown
-                className={"text-white bg-yellow-800 hover:bg-yellow-700 flex-1 h-full rounded-2xl"}
+                className={
+                  "text-white bg-yellow-800 hover:bg-yellow-700 flex-1 h-10 rounded-full"
+                }
                 text="Yellow"
                 options={timingOptions.filter((val, i) => val > green)}
                 selectedOption={yellow}
                 onOptionChange={(value) => setYellow(value)}
               />
               <DropDown
-                className={"text-white bg-red-800 hover:bg-red-700 flex-1 h-full rounded-2xl"}
+                className={
+                  "text-white bg-red-800 hover:bg-red-700 flex-1 h-10 rounded-full"
+                }
                 text="Red"
                 options={timingOptions.filter((val, i) => val > yellow)}
                 selectedOption={red}
@@ -195,55 +212,43 @@ function Home({className, id}) {
               />
             </div>
 
-            <div className="w-full min-h-16 py-1 flex flex-col md:flex-row justify-center items-center">
-              <Button
+              <button
                 disabled={!category || topicLoadCounter}
-                text="Generate New Topic"
-                className={`h-full w-full rounded-2xl text-2xl font-regular bg-opacity-80 hover:bg-opacity-95
-                ${!category || topicLoadCounter ? "bg-orange-400 text-white" : "bg-teal-700 hover:bg-teal-600"}`}
+                className={`h-14 w-full rounded-full backdrop-blur-sm bg-white ${
+                  !timerActive
+                    ? "bg-opacity-[0.1] bg-white"
+                    : "bg-neutral-800 bg-opacity-80"
+                }
+                text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
                 onClick={() => onClickGenerateTopic()}
-              />
-            </div>
-            <div className="w-full min-h-16 py-1 space-x-2 flex  justify-center items-center">
-                <Button
-                  className="bg-zinc-600 hover:bg-zinc-500  w-full h-full rounded-2xl text-xl text-white"
-                  text={
-                    timerActive
-                      ? "Pause"
-                      : timer
-                      ? "Resume"
-                      : "Start"
-                  }
-                  onClick={() => onStartStopClick()}
-                />
-
-                <Button
-                  text={"Reset"}
-                  className="bg-red-800 hover:bg-red-700 w-full h-full rounded-2xl text-xl text-white"
-                  onClick={() => onResetClick()}
-                />
-            </div>
-
-            <div
-              className={`flex-1 flex flex-col justify-center items-center mx-3 my-3 mb-6
-              transition-all duration-500
-              rounded-3xl shadow-lg ring-1 ${timerColor.ring} ${timerColor.bg}`}
-            >
-              <span>
-                {!category ? "Select a category" :
-                !currentTopic?.question ? "Generate a new topic" : 
-                "Give a speech about..."}
-              </span>
-              <span className="text-center text-3xl font-semibold mt-2 mb-4 mx-4">
-                {currentTopic?.question || ""}
-              </span>
-              <span
-                className={`text-3xl font-semibold transition-colors duration-500 ${timerColor.text}`}
               >
-                {formatTime(timer)}
-              </span>
-            </div>
+                Generate Topic
+              </button>
+            <div className="w-full h-14 space-x-2 flex justify-center items-center">
+              <button
+                className={`h-full w-full rounded-full backdrop-blur-sm  ${
+                  !timerActive
+                    ? "bg-opacity-[0.25] bg-green-400"
+                    : "bg-green-800 bg-opacity-80"
+                }
+                text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
+                onClick={() => onStartStopClick()}
+              >
+                {timerActive ? "Pause" : timer ? "Resume" : "Start"}
+              </button>
 
+              <button
+                className={`h-full w-full rounded-full backdrop-blur-sm  ${
+                  !timerActive
+                    ? "bg-opacity-[0.25] bg-red-500"
+                    : "bg-red-800 bg-opacity-80"
+                }
+                text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
+                onClick={() => onResetClick()}
+              >
+                Reset
+              </button>
+            </div>
           </div>
         </div>
       </div>

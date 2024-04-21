@@ -26,15 +26,16 @@ function App({ user_str }) {
   return (
     <>
       <div
-        className=" bg-neutral-50 
-        h-screen w-screen flex flex-col overflow-hidden"
+        className="bg-neutral-900
+        relative h-screen w-screen flex flex-col overflow-hidden"
       >
-        <header className="w-screen h-16 flex justify-between items-center px-2 md:px-10">
-          <span className="header-font text-4xl font-extrabold text-nowrap whitespace-nowrap text-gradient from-orange-950 to-orange-700 ">
+        <div className="-z-0 absolute h-full w-full doodles-light opacity-10" />
+        <header className="z-10 w-screen h-16 flex justify-between items-center px-2 md:px-10">
+          <span className="header-font text-4xl font-extrabold text-nowrap whitespace-nowrap text-gradient from-neutral-50 to-neutral-200 ">
             Table Topicker
           </span>
           <div>
-            <span className="font-light text-xl">{user?.credits || 0} Credits</span>
+            <span className="font-light text-xl text-white">{user?.credits || 0} Credits</span>
           </div>
         </header>
         <main
