@@ -26,7 +26,7 @@ function App({ user_str }) {
   return (
     <>
       <div
-        className="bg-neutral-900
+        className="bg-base-100
         relative h-screen w-screen flex flex-col overflow-hidden"
       >
         <div className="-z-0 absolute h-full w-full doodles-light opacity-10" />
