@@ -5,11 +5,31 @@ import { domain } from "@/config";
 import DropDown from "@/components/DropDown";
 import c from "@/assets/constants";
 
-function Home({ className, id }) {
+const UpgradeModal = ({ user }) => {
+  return (
+    <dialog id="upgrade_modal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Get inifnite topics with AI</h3>
+        <p class="py-4">
+          {!user &&
+            "Create an account on the Profile page to get start with infinite topics about any theme you can imagine."}
+          {user?.credits === 0 &&
+            `You currently have ${user.credits} credits. Purchase credits on the Profile page to generate infinite topics about any theme you can imagine.`}
+        </p>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+  );
+};
+
+function Home({ className, id, user }) {
   const [category, setCategory] = useState(false);
   const [categories, setCategories] = useState(false);
   const [currentTopic, setCurrentTopic] = useState(null);
   const [topicHistory, setTopicHistory] = useState([]);
+  const [aiTopics, setAiTopics] = useState(false);
   // Topic load counter serves the purpose of counting how many attempts to find a unique
   // question have been completed, as well as being a loading new topic indicator (!!topicLoadCounter)
   const [topicLoadCounter, setTopicLoadCounter] = useState(null);
@@ -141,17 +161,45 @@ function Home({ className, id }) {
     setTimer(0);
   }
 
+  function onClickAITopics() {
+    const modal = document.getElementById("upgrade_modal");
+    if (!user) {
+      modal.showModal();
+    } else {
+      // Check if tokens available, or show upgrade modal
+      setAiTopics((prev) => !prev);
+    }
+  }
+
   const timerColor = timerColorScheme[getTimerColor(timer)];
   return (
     <div className="h-full snap-center snap-always">
+      <UpgradeModal user={user} />
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
         <div
           className={`${c.contentContainer} w-full h-full flex flex-col rounded-[2.5rem] py-4
           transition-all duration-500 ${timerColor.bg} bg-opacity-35`}
         >
+          <div className="h-16 w-full flex justify-end items-center">
+            <div className="relative flex me-4">
+              <span className="text-3xl md:text-4xl font-bold z-10 text-white">
+                AI Topics
+              </span>
+              <img
+                src="/stars.png"
+                className="h-16 md:h-20 w-auto absolute -ml-12 md:-ml-16 -mt-5 md:-mt-7 start-0 top-0 z-0"
+              />
+            </div>
+            <input
+              type="checkbox"
+              checked={aiTopics}
+              onChange={onClickAITopics}
+              className="toggle toggle-lg toggle-primary"
+            />
+          </div>
           <div
-            className={`flex-1 flex flex-col justify-center items-center mx-3 my-3 mb-6
-              transition-all duration-500`}
+            id="topic-container"
+            className={`flex-1 flex flex-col justify-center items-center mx-3 my-3 mb-6 transition-all duration-500`}
           >
             <span className="text-white font-semibold">
               {!category
@@ -165,23 +213,29 @@ function Home({ className, id }) {
             </span>
           </div>
 
-          <div className="w-full h-min flex flex-col items-center space-y-2 py-2">
-
-          <span
+          <div
+            id="control-container"
+            className="w-full h-min flex flex-col items-center space-y-2 py-2"
+          >
+            <span
               className={`text-3xl font-semibold transition-colors duration-500 ${timerColor.text}`}
             >
               {formatTime(timer)}
             </span>
-            <DropDown
-              className={
-                "bg-white shadow-sm text-neutral-600 h-14 w-full rounded-full"
-              }
-              options={categories || []}
-              selectedOption={category}
-              defaultText="Topic Theme"
-              loading={!categories}
-              onOptionChange={(category) => setCategory(category)}
-            />
+            {aiTopics ? (
+              <input type="text" />
+            ) : (
+              <DropDown
+                className={
+                  "bg-white shadow-sm text-neutral-600 h-14 w-full rounded-full"
+                }
+                options={categories || []}
+                selectedOption={category}
+                defaultText="Topic Theme"
+                loading={!categories}
+                onOptionChange={(category) => setCategory(category)}
+              />
+            )}
             <div className="w-full h-min py-1 flex flex-row justify-center items-center space-x-2">
               <DropDown
                 className={
@@ -212,18 +266,18 @@ function Home({ className, id }) {
               />
             </div>
 
-              <button
-                disabled={!category || topicLoadCounter}
-                className={`h-14 w-full rounded-full backdrop-blur-sm bg-white ${
-                  !timerActive
-                    ? "bg-opacity-[0.1] bg-white"
-                    : "bg-neutral-800 bg-opacity-80"
-                }
+            <button
+              disabled={!category || topicLoadCounter}
+              className={`h-14 w-full rounded-full backdrop-blur-sm bg-white ${
+                !timerActive
+                  ? "bg-opacity-[0.1] bg-white"
+                  : "bg-neutral-800 bg-opacity-80"
+              }
                 text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
-                onClick={() => onClickGenerateTopic()}
-              >
-                Generate Topic
-              </button>
+              onClick={() => onClickGenerateTopic()}
+            >
+              Generate Topic
+            </button>
             <div className="w-full h-14 space-x-2 flex justify-center items-center">
               <button
                 className={`h-full w-full rounded-full backdrop-blur-sm  ${

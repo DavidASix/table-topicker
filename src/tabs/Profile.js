@@ -39,7 +39,7 @@ function Profile({ className, user, userLoggedIn }) {
       </button>
     </form>
   );
-
+    console.log({user})
   return (
     <div className="h-full snap-center snap-always">
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
@@ -47,7 +47,7 @@ function Profile({ className, user, userLoggedIn }) {
           className={`${c.contentContainer} w-full h-full flex flex-col 
           backdrop-blur-sm rounded-[2.5rem] py-4 border border-neutral-800`}
         >
-          {user === false && <LoginForm />}
+          {user === null && <LoginForm />}
           {user && (
             <>
               <div className="px-2 py-4 w-full flex flex-col">
