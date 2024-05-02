@@ -23,6 +23,18 @@ function Profile({ className, user, showAlert }) {
     }
   }
 
+  async function onClickLogout() {
+    console.log('On Click Logout')
+    try {
+      await axios.get('/api/auth/logout');
+      // Cookie is invalidated server side
+      window.location.href = "/";
+    } catch (err) {
+      showAlert("Could not logout, please try again.");
+      console.log(err)
+    }
+  }
+
   return (
     <div className="h-full snap-center snap-always">
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
@@ -113,9 +125,7 @@ function Profile({ className, user, showAlert }) {
                 text-lg font-light text-neutral-900
                 bg-white shadow hover:shadow-lg hover:scale-[1.01]
                 transition-all duration-300"
-                    onClick={() =>
-                      alert("Functionality not implemented, sorry!")
-                    }
+                    onClick={() => onClickLogout()}
                   >
                     Logout
                   </button>

@@ -13,20 +13,25 @@ import { invalidateJWT } from "@/utils/jwt";
  */
 
 export default async function handler(req, res) {
-	if (req.method !== 'GET') {
-	  return res.status(405).json({ error: 'Method not allowed' });
-	}
-  
-    const {jwt} = req.cookies
-	if (!jwt) {
-	  return res.status(400).json({ error: 'Missing magic link UUID' });
-	}
-  
-	try {
-        invalidateJWT(jwt)
-	  // Redirect the user to the home page 
-	  res.redirect(302, '/protected').end();
-	} catch (error) {
-	  res.status(500).json({ error: error.message });
-	}
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
+
+  const { jwt } = req.cookies;
+  if (!jwt) {
+    return res.status(400).json({ error: "Missing magic link UUID" });
+  }
+
+  try {
+    invalidateJWT(jwt);
+
+    res.setHeader(
+      "Set-Cookie",
+      `jwt=; HttpOnly; Secure; SameSite=Strict; Path=/`
+    );
+    // Redirect the user to the home page
+    res.redirect(302, "/").end();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
