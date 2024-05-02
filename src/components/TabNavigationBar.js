@@ -19,8 +19,12 @@ const Link = ({
   currentIndex,
 }) => {
   const scrollDistance = scrollWidth * index;
-  const containerStyle = index === currentIndex ? "bg-orange-300" : "bg-slate-50 md:hover:bg-slate-200 scale-90";
-  const iconStyle = index === currentIndex ? "fill-orange-950" : "fill-slate-700";
+  const containerStyle =
+    index === currentIndex
+      ? "bg-orange-300"
+      : "bg-slate-50 md:hover:bg-slate-200 scale-90";
+  const iconStyle =
+    index === currentIndex ? "fill-orange-950" : "fill-slate-700";
   return (
     <button
       title={title}
@@ -41,7 +45,7 @@ const Link = ({
     </button>
   );
 };
-export default function Button({ className, scrollElement }) {
+export default function TabNavigationBar({ className, scrollElement }) {
   const [scrollContainerWidth, setScrollContainerWidth] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   // This scroll event is used to control the indicator position of tab bar
@@ -65,7 +69,9 @@ export default function Button({ className, scrollElement }) {
       };
     }
   }, [scrollElement]);
-
+  if (scrollElement?.current === null) {
+    return null;
+  }
   return (
     <nav
       className={`${className || ""} absolute bottom-2 left-0 right-0 mx-auto

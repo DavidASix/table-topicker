@@ -18,19 +18,18 @@ export const getServerSideProps = async (context) => {
 function App({ user_str }) {
   const scrollRef = useRef(null);
   const [user, setUser] = useState(null);
-  const [message, setAlertMessage] = useState('');
-  const [visible, setAlertVisible] = useState('');
-  const [type, setAlertType] = useState('');
-  
+  const [message, setAlertMessage] = useState("");
+  const [visible, setAlertVisible] = useState("");
+  const [type, setAlertType] = useState("");
+
   useEffect(() => {
     const initialUser = user_str ? JSON.parse(user_str) : false;
     setUser(initialUser);
   }, []);
 
   function showAlert(type, msg) {
-    console.log({type, msg})
     if (!visible) {
-      setAlertType(type)
+      setAlertType(type);
       setAlertMessage(msg);
       setAlertVisible(true);
       setTimeout(() => setAlertVisible(false), 3000);
@@ -60,9 +59,21 @@ function App({ user_str }) {
               overflow-x-scroll snap-mandatory snap-x"
           ref={scrollRef}
         >
-          <Home user={user} showAlert={(type, msg) => showAlert(type, msg)} className="z-10" />
-          <Profile user={user} showAlert={(type, msg) => showAlert(type, msg)} userLoggedIn={(user) => setUser(user)} />
-          <History user={user} showAlert={(type, msg) => showAlert(type, msg)} className="z-10" />
+          <Home
+            user={user}
+            showAlert={(type, msg) => showAlert(type, msg)}
+            className="z-10"
+          />
+          <Profile
+            user={user}
+            showAlert={(type, msg) => showAlert(type, msg)}
+            userLoggedIn={(user) => setUser(user)}
+          />
+          <History
+            user={user}
+            showAlert={(type, msg) => showAlert(type, msg)}
+            className="z-10"
+          />
         </main>
         <TabNavigationBar className="z-20" scrollElement={scrollRef} />
       </div>
