@@ -1,45 +1,28 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-
-import { domain } from "@/config";
 import c from "@/assets/constants";
 
-function Profile({ className, user, userLoggedIn }) {
-  //const user = JSON.parse(user_str);
-  //console.log({user, className})
-  async function loginSubmit(e) {
-    e.preventDefault();
-    const email = e.target.email.value;
+function Profile({ className, user, showAlert }) {
+  const [email, setEmail] = useState("david@davidasix.com");
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  async function loginSubmit(event) {
+    event.preventDefault();
+    setLoginLoading(true);
     try {
-      const url = `${domain}/api/auth/sendMagicLink`;
-      const { data } = await axios.post(url, { email });
-      console.log(data);
-    } catch (err) {
-      console.log(err);
+      await axios.post("/api/auth/sendMagicLink", { email });
+      setLoginLoading("sent");
+      showAlert("success", "Login Link Sent");
+    } catch (error) {
+      // Handle error
+      showAlert("Error sending login link, please try again.");
+      setLoginLoading(false);
+
+      // Implement your DaisyUI Alert here with error.response.data.message (or a generic error message if that's not available)
+      console.error("Error sending magic link:", error);
     }
   }
 
-  const LoginForm = () => (
-    <form
-      className="bg-white rounded-lg p-8 max-w-sm mx-auto"
-      onSubmit={loginSubmit}
-    >
-      <h1 className="text-3xl font-light">Login</h1>
-      <input
-        className="w-full px-3 py-2 mt-4 bg-gray-200 appearance-none border-2 border-gray-200 rounded-lg placeholder-gray-900"
-        placeholder="youremail@example.com"
-        name="email"
-        type="text"
-      />
-      <button
-        className="w-full bg-gray-900 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg mt-4"
-        type="submit"
-      >
-        Submit
-      </button>
-    </form>
-  );
-    console.log({user})
   return (
     <div className="h-full snap-center snap-always">
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
@@ -47,7 +30,62 @@ function Profile({ className, user, userLoggedIn }) {
           className={`${c.contentContainer} w-full h-full flex flex-col 
           backdrop-blur-sm rounded-[2.5rem] py-4 border border-neutral-800`}
         >
-          {user === null && <LoginForm />}
+          {user === null && (
+            <div className="w-full h-full flex items-center justify-center p-4">
+              <form
+                className="bg-transparent space-y-4 rounded-xl w-full md:w-1/2"
+                onSubmit={loginSubmit}
+              >
+                <h2 className="text-5xl font-bold text-center text-white">
+                  Login
+                </h2>
+                <p className="text-center">
+                  Want infinite AI topics, Uhm & Ah counters, Topic History, and
+                  more? Sign up for a free membership today with just your
+                  email!
+                </p>
+                <div className="space-y-2">
+                  <label htmlFor="email" className="block text-white">
+                    Email:
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="rounded-lg border border-gray-300 w-full px-3 py-2 focus:outline-none focus:border-blue-500 bg-white/30 text-white"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className={`relative w-full text-neutral-400 enabled:text-white font-medium py-3 px-8 rounded-full focus:outline-none focus:shadow-outline
+                  transition-all duration-300 enabled:hover:bg-orange-700 
+                  ${
+                    loginLoading === "sent"
+                      ? "bg-emerald-700/60"
+                      : loginLoading
+                      ? "bg-neutral-700/60"
+                      : "bg-orange-500/60"
+                  }`}
+                  disabled={loginLoading}
+                >
+                  {loginLoading === "sent" ? (
+                    <>
+                      Waiting for link click
+                      <span className="absolute end-4 loading loading-ring loading-md"></span>
+                    </>
+                  ) : loginLoading ? (
+                    "Sending Magic Link..."
+                  ) : (
+                    "Login"
+                  )}
+                </button>
+              </form>
+            </div>
+          )}
+
           {user && (
             <>
               <div className="px-2 py-4 w-full flex flex-col">
@@ -56,28 +94,32 @@ function Profile({ className, user, userLoggedIn }) {
               </div>
               <div className="w-full grid grid-cols-2 space-y-4 md:space-y-0">
                 <div className="flex justify-center items-center col-span-2 md:col-span-1">
-                <button
-                  className="min-w-64 px-4 h-10 rounded-3xl
+                  <button
+                    className="min-w-64 px-4 h-10 rounded-3xl
                 text-lg font-light text-neutral-900
                 bg-white shadow hover:shadow-lg hover:scale-[1.01]
                 transition-all duration-300"
-                onClick={() => alert('Functionality not implemented, sorry!')}
-                >
-                  Purchase Credits
-                </button>
+                    onClick={() =>
+                      alert("Functionality not implemented, sorry!")
+                    }
+                  >
+                    Purchase Credits
+                  </button>
                 </div>
 
                 <div className="flex justify-center items-center col-span-2 md:col-span-1">
-                <button
-                  className="min-w-64 px-4 h-10 rounded-3xl
+                  <button
+                    className="min-w-64 px-4 h-10 rounded-3xl
                 text-lg font-light text-neutral-900
                 bg-white shadow hover:shadow-lg hover:scale-[1.01]
                 transition-all duration-300"
-                onClick={() => alert('Functionality not implemented, sorry!')}
-                >
-                  Logout
-                </button>
-              </div>
+                    onClick={() =>
+                      alert("Functionality not implemented, sorry!")
+                    }
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             </>
           )}
