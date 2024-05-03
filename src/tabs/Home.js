@@ -29,17 +29,24 @@ const EvaluationModal = ({
   time,
   topic,
 }) => {
-  function submitEval(e) {
+  const [loading, setLoading] = useState(false);
+  async function submitEval(e) {
     e.preventDefault();
+    setLoading(true);
     // Accessing the speaker radio button
-    const speakerRadio = document.querySelector('input[name="radio-10"]:checked');
-    const speaker = speakerRadio.value;  // "user" or "guest"
-  
+    const speakerRadio = document.querySelector(
+      'input[name="radio-10"]:checked'
+    );
+    const speaker = speakerRadio.value; // "user" or "guest"
+
     // Accessing the rating radio button
-    const ratingRadio = document.querySelector('input[name="rating-9"]:checked');
-    const rating = ratingRadio.value;  // Integer between 1 and 5 (or "none")
-    console.log(speaker, rating)
-    onCompleteEvaluation(speaker, rating)
+    const ratingRadio = document.querySelector(
+      'input[name="rating-9"]:checked'
+    );
+    const rating = ratingRadio.value; // Integer between 1 and 5 (or "none")
+    console.log(speaker, rating);
+    await onCompleteEvaluation(speaker, rating);
+    setLoading(false);
     document.getElementById("evaluationForm").reset();
   }
 
@@ -130,18 +137,23 @@ const EvaluationModal = ({
             <button
               tag="button"
               type="cancel"
-              className="flex-1 h-10 bg-red-500 text-white rounded-full"
+              className="flex-1 h-10 bg-red-500 text-white rounded-full disabled:bg-neutral-600 disabled:text-neutral-400 transition-colors duration-500"
               onClick={discardEval}
+              disabled={loading}
             >
               Discard
             </button>
             <button
               tag="button"
               type="submit"
-              className="flex-1 h-10 bg-orange-500 text-white rounded-full"
+              className="flex-1 h-10 bg-orange-500 text-white rounded-full relative disabled:bg-neutral-600 disabled:text-neutral-400 transition-colors duration-500"
               onClick={submitEval}
+              disabled={loading}
             >
               Submit
+              {loading && (
+                <span className="absolute end-4 loading loading-ring loading-md"></span>
+              )}
             </button>
           </div>
         </form>
@@ -287,14 +299,18 @@ function Home({ showAlert, user }) {
       duration: time,
       speaker,
       rating,
-    }
+    };
     try {
-      console.log({historyInsert})
-      //const {data} = axios.post('/api/user/storeHistory');
+      console.log({ historyInsert });
+      await axios.post("/api/user/storeHistory", historyInsert);
       showAlert("info", "Topic Results Saved, Great Work!");
     } catch (err) {
-      console.log(err);
-      showAlert("error", "Could not save result")
+      console.log(err.message);
+      console.log(err?.response?.data);
+      showAlert(
+        "error",
+        `Could not save result. ${err?.response?.data || err.message}`
+      );
     } finally {
       const modal = document.getElementById("evaluation_modal");
       modal.close();
@@ -340,7 +356,9 @@ function Home({ showAlert, user }) {
     <div className="h-full snap-center snap-always" id="home">
       <UpgradeModal user={user} />
       <EvaluationModal
-        onCompleteEvaluation={(speaker, rating) => onCompleteEvaluation(speaker, rating)}
+        onCompleteEvaluation={(speaker, rating) =>
+          onCompleteEvaluation(speaker, rating)
+        }
         onDiscardEvaluation={() => onDiscardEvaluation()}
         time={stringTime(timer)}
         topic={currentTopic?.question}
