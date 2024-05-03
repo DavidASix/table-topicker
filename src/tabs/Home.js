@@ -24,11 +24,21 @@ const UpgradeModal = ({ user }) => {
   );
 };
 
-function Home({ className, id, user }) {
+const timingOptions = [
+  "0:15",
+  "0:30",
+  "0:45",
+  "1:00",
+  "1:15",
+  "1:30",
+  "1:45",
+  "2:00",
+];
+
+function Home({ showAlert, user }) {
   const [category, setCategory] = useState(false);
   const [categories, setCategories] = useState(false);
   const [currentTopic, setCurrentTopic] = useState(null);
-  const [topicHistory, setTopicHistory] = useState([]);
   const [aiTopics, setAiTopics] = useState(false);
   // Topic load counter serves the purpose of counting how many attempts to find a unique
   // question have been completed, as well as being a loading new topic indicator (!!topicLoadCounter)
@@ -50,32 +60,14 @@ function Home({ className, id, user }) {
       .catch((err) => console.log(err));
   }, []);
 
-  const timingOptions = [
-    "0:15",
-    "0:30",
-    "0:45",
-    "1:00",
-    "1:15",
-    "1:30",
-    "1:45",
-    "2:00",
-  ];
-
-  const timerColorScheme = {
-    inactive: "transparent",
-    active: "bg-neutral-500",
-    green: "bg-emerald-600",
-    yellow: "bg-yellow-600",
-    red: "bg-red-600",
-  };
-
+  // Get Functions
   function getTime(seconds) {
     let m = Math.floor(seconds / 60);
     let s = seconds % 60;
     return { m, s };
   }
 
-  function getTimerColor(seconds) {
+  function getBgColor(seconds) {
     const { m, s } = getTime(seconds);
     // String format seconds to match the options from dropdowns for compare.
     let sec = s;
@@ -84,62 +76,32 @@ function Home({ className, id, user }) {
     }
 
     const t = `${m}:${sec}`;
-    let color = "";
+    let status = "";
 
     if (!timerActive) {
-      color = "inactive";
+      status = "inactive";
     } else if (t < green) {
-      color = "active";
+      status = "active";
     } else if (t < yellow) {
-      color = "green";
+      status = "green";
     } else if (t < red) {
-      color = "yellow";
+      status = "yellow";
     } else {
-      color = "red";
+      status = "red";
     }
-    return color;
+
+    const timerColorScheme = {
+      inactive: "transparent",
+      active: "bg-neutral-500",
+      green: "bg-emerald-600",
+      yellow: "bg-yellow-600",
+      red: "bg-red-600",
+    };
+
+    return timerColorScheme[status];
   }
 
-  function onTimeDropdownChange(color, time) {
-    if (color === "green") {
-      setGreen(time);
-      if (yellow <= time) {
-        setYellow(timingOptions.filter((t) => t > time)[0]);
-        setRed(timingOptions.filter((t) => t > time)[1]);
-      }
-    } else if (color === "yellow") {
-      setYellow(time);
-      if (red <= time) {
-        setRed(timingOptions.filter((t) => t > time)[0]);
-      }
-    } else if (color === "red") {
-      setRed(time);
-    }
-  }
-
-  async function onClickGenerateTopic() {
-    if (!category) {
-      return alert("Please select a category");
-    }
-    // if (currentTopic) {
-    //   setTopicHistory([...topicHistory, {...currentTopic, timer}])
-    // }
-    // setTopicLoadCounter(topicLoadCounter+1)
-    // // TODO: Improve alert system with custom component
-    // if (topicLoadCounter > 10) {
-    //   return alert('Could not find more topics for this category, please select a new one!')
-    // }
-    try {
-      const url = `/api/data/getRandomQuestionInCategory`;
-      const { data } = await axios.post(url, { category });
-      setCurrentTopic(data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setTopicLoadCounter(null);
-    }
-  }
-
+  // OnAction - Timer Controls
   function onStartStopClick() {
     if (interval.current) {
       setTimerActive(false);
@@ -162,6 +124,40 @@ function Home({ className, id, user }) {
     setTimer(0);
   }
 
+  function onTimeDropdownChange(color, time) {
+    if (color === "green") {
+      setGreen(time);
+      if (yellow <= time) {
+        setYellow(timingOptions.filter((t) => t > time)[0]);
+        setRed(timingOptions.filter((t) => t > time)[1]);
+      }
+    } else if (color === "yellow") {
+      setYellow(time);
+      if (red <= time) {
+        setRed(timingOptions.filter((t) => t > time)[0]);
+      }
+    } else if (color === "red") {
+      setRed(time);
+    }
+  }
+
+  // OnAction - Topics
+  async function onClickGenerateTopic() {
+    if (!category) {
+      return alert("Please select a category");
+    }
+    try {
+      const url = `/api/data/getRandomQuestionInCategory`;
+      const { data } = await axios.post(url, { category });
+      setCurrentTopic(data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setTopicLoadCounter(null);
+    }
+  }
+
+  // OnAction - AI Topics
   function onClickAITopics() {
     const modal = document.getElementById("upgrade_modal");
     if (!user) {
@@ -172,14 +168,13 @@ function Home({ className, id, user }) {
     }
   }
 
-  const timerColor = timerColorScheme[getTimerColor(timer)];
   return (
     <div className="h-full snap-center snap-always" id="home">
       <UpgradeModal user={user} />
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
         <div
           className={`${c.contentContainer} w-full h-full flex flex-col rounded-[2.5rem] py-4
-          transition-all duration-500 ${timerColor} bg-opacity-35`}
+          transition-all duration-500 ${getBgColor(timer)} bg-opacity-45`}
         >
           <div className="h-16 w-full flex justify-end items-center">
             <div className="relative flex me-4">
