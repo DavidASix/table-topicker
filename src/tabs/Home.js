@@ -50,7 +50,7 @@ function Home({ className, id, user }) {
       .catch((err) => console.log(err));
   }, []);
 
-  //const categories = ["Life", "Work", "School", "Family"];
+  
   const timingOptions = [
     "0:15",
     "0:30",
@@ -61,8 +61,7 @@ function Home({ className, id, user }) {
     "1:45",
     "2:00",
   ];
-  // I had considered just updating the value of the color and using it as a variable within class names,
-  // But that method does not trigger tailwinds to generate the required classes, so they are named explicitly here
+  
   const timerColorScheme = {
     inactive: {
       text: "text-neutral-400",
@@ -89,17 +88,21 @@ function Home({ className, id, user }) {
     },
   };
 
-  function formatTime(seconds) {
+  function getTime(seconds) {
     let m = Math.floor(seconds / 60);
     let s = seconds % 60;
-    while (String(s).length < 2) {
-      s = "0" + s;
-    }
-    return `${m}:${s}`;
+    return {m,s};
   }
 
   function getTimerColor(seconds) {
-    const t = formatTime(seconds);
+    const {m,s} = getTime(seconds);
+    // String format seconds to match the options from dropdowns for compare.
+    let sec = s
+    while (String(sec).length < 2) {
+      sec = "0" + sec;
+    }
+
+    const t = `${m}:${sec}`;
     let color = "";
 
     if (!timerActive) {
@@ -238,9 +241,8 @@ function Home({ className, id, user }) {
             <span
               className={`countdown text-3xl font-semibold transition-colors duration-500 ${timerColor.text}`}
             >
-              <span style={{ "--value": 24 }}></span>:
-              <span style={{ "--value": 39 }}></span>
-              {formatTime(timer)}
+              <span style={{ "--value": getTime(timer).m }}></span>:
+              <span style={{ "--value": getTime(timer).s }}></span>
             </span>
 
             {/* Topic Selector */}
