@@ -33,9 +33,9 @@ function Home({ className, id, user }) {
   // Topic load counter serves the purpose of counting how many attempts to find a unique
   // question have been completed, as well as being a loading new topic indicator (!!topicLoadCounter)
   const [topicLoadCounter, setTopicLoadCounter] = useState(null);
-  const [green, setGreen] = useState("1:00");
-  const [yellow, setYellow] = useState("1:30");
-  const [red, setRed] = useState("2:00");
+  const [green, setGreen] = useState("0:30");
+  const [yellow, setYellow] = useState("0:45");
+  const [red, setRed] = useState("1:00");
   const [timer, setTimer] = useState(0);
   // This could be ascertained by observing the interval ref, but that causes
   // a delay in re-renders while the ref updates the state
@@ -114,6 +114,23 @@ function Home({ className, id, user }) {
       color = "red";
     }
     return color;
+  }
+
+  function onTimeDropdownChange(color, time) {
+    if (color === "green") {
+      setGreen(time);
+      if (yellow <= time) {
+        setYellow(timingOptions.filter((t) => t > time)[0]);
+        setRed(timingOptions.filter((t) => t > time)[1]);
+      }
+    } else if (color === "yellow") {
+      setYellow(time);
+      if (red <= time) {
+        setRed(timingOptions.filter((t) => t > time)[0]);
+      }
+    } else if (color === "red") {
+      setRed(time);
+    }
   }
 
   async function onClickGenerateTopic() {
@@ -217,11 +234,16 @@ function Home({ className, id, user }) {
             id="control-container"
             className="w-full h-min flex flex-col items-center space-y-2 py-2"
           >
+            {/* Timer Readout */}
             <span
-              className={`text-3xl font-semibold transition-colors duration-500 ${timerColor.text}`}
+              className={`countdown text-3xl font-semibold transition-colors duration-500 ${timerColor.text}`}
             >
+              <span style={{ "--value": 24 }}></span>:
+              <span style={{ "--value": 39 }}></span>
               {formatTime(timer)}
             </span>
+
+            {/* Topic Selector */}
             {aiTopics ? (
               <input type="text" />
             ) : (
@@ -236,36 +258,45 @@ function Home({ className, id, user }) {
                 onOptionChange={(category) => setCategory(category)}
               />
             )}
+            {/* Timer dropdowns. Options available are defined by the next lowest timer */}
             <div className="w-full h-min py-1 flex flex-row justify-center items-center space-x-2">
-              <DropDown
-                className={
-                  "text-white bg-green-900 hover:bg-green-800 flex-1 h-10 rounded-full"
-                }
-                text="Green"
-                options={timingOptions}
-                selectedOption={green}
-                onOptionChange={(value) => setGreen(value)}
-              />
-              <DropDown
-                className={
-                  "text-white bg-yellow-800 hover:bg-yellow-700 flex-1 h-10 rounded-full"
-                }
-                text="Yellow"
-                options={timingOptions.filter((val, i) => val > green)}
-                selectedOption={yellow}
-                onOptionChange={(value) => setYellow(value)}
-              />
-              <DropDown
-                className={
-                  "text-white bg-red-800 hover:bg-red-700 flex-1 h-10 rounded-full"
-                }
-                text="Red"
-                options={timingOptions.filter((val, i) => val > yellow)}
-                selectedOption={red}
-                onOptionChange={(value) => setRed(value)}
-              />
+              <select
+                value={green}
+                onChange={(e) => onTimeDropdownChange("green", e.target.value)}
+                className="select flex-1 rounded-full
+                text-white text-lg bg-green-900 hover:bg-green-800 "
+              >
+                {timingOptions.slice(0, -2).map((t, i) => (
+                  <option key={i}>{t}</option>
+                ))}
+              </select>
+              <select
+                value={yellow}
+                onChange={(e) => onTimeDropdownChange("yellow", e.target.value)}
+                className="select flex-1 rounded-full
+                text-white text-lg bg-yellow-800 hover:bg-yellow-700 "
+              >
+                {timingOptions
+                  .filter((val) => val > green)
+                  .slice(0, -1)
+                  .map((t, i) => (
+                    <option key={i}>{t}</option>
+                  ))}
+              </select>
+              <select
+                value={red}
+                onChange={(e) => onTimeDropdownChange("red", e.target.value)}
+                className="select flex-1 rounded-full
+                text-white text-lg bg-red-800 hover:bg-red-700 "
+              >
+                {timingOptions
+                  .filter((val) => val > yellow)
+                  .map((t, i) => (
+                    <option key={i}>{t}</option>
+                  ))}
+              </select>
             </div>
-
+            {/* Control Buttons */}
             <button
               disabled={!category || topicLoadCounter}
               className={`h-14 w-full rounded-full backdrop-blur-sm bg-white ${
