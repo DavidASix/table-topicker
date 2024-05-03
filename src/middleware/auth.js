@@ -39,8 +39,8 @@ const auth = async (req, res, next) => {
   } catch (error) {
     console.log("User Failed Authentication!");
     console.log(`Error: ${error.message}`);
-    req.user = null;
-    req.authenticated = null;
+    req.user = false;
+    throw { code: 403, message: "Not Logged In" };
   }
 };
 

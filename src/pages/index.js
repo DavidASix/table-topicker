@@ -9,8 +9,13 @@ import auth from "@/middleware/auth";
 
 export const getServerSideProps = async (context) => {
   let props = {};
-  await auth(context.req, context.res);
-  props.user_str = JSON.stringify(context.req?.user);
+  try {
+    await auth(context.req, context.res);
+    props.user_str = JSON.stringify(context.req?.user);
+  } catch (err) {
+    console.log(err)
+    props.user_str = null
+  }
 
   return { props };
 };
@@ -35,7 +40,7 @@ function App({ user_str }) {
       setTimeout(() => setAlertVisible(false), 3000);
     }
   }
-
+  
   return (
     <>
       <div

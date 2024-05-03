@@ -1,31 +1,24 @@
 import auth from "@/middleware/auth";
+//import limiter from "@/middleware/rateLimiter";
+import reqType from "@/middleware/reqType";
+import validateInput from "@/middleware/validateInput";
 import { connectToDatabase, disconnectFromDatabase } from "@/utils/database";
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
-
-  // Apply authentication middleware
   try {
+    await reqType(req, "POST");
     await auth(req, res);
-    if (!req.user || !req.authenticated) {
-      const err = new Error("Unauthorized");
-      throw Object.assign(new Error("Unauthorized"), { statusCode: 401 });
+    if (!req.user) {
+        throw { code: 405, message: "Incorrect request type" };
     }
+    const { category, topic } = req.body;
+    await validateInput([
+      {name: 'category', value: category, type: 'string'},
+      {name: 'topic', value: topic, type: 'string'},
+    ])
   } catch (error) {
     // Handle errors from middleware (e.g., unauthorized access)
     return res.status(error.statusCode || 500).json({ message: error.message });
-  }
-
-  const { category, topic } = req.body;
-  if (
-    typeof category !== "string" ||
-    category.trim() === "" ||
-    typeof topic !== "string" ||
-    topic.trim() === ""
-  ) {
-    return res.status(400).json({ message: "Category and Topic Required" });
   }
 
   try {
