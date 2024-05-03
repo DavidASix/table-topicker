@@ -50,7 +50,6 @@ function Home({ className, id, user }) {
       .catch((err) => console.log(err));
   }, []);
 
-  
   const timingOptions = [
     "0:15",
     "0:30",
@@ -61,43 +60,25 @@ function Home({ className, id, user }) {
     "1:45",
     "2:00",
   ];
-  
+
   const timerColorScheme = {
-    inactive: {
-      text: "text-neutral-400",
-      bg: "transparent",
-    },
-    active: {
-      text: "text-sky-100",
-      bg: "bg-sky-100",
-    },
-    green: {
-      text: "text-green-100",
-      ring: "ring-green-400",
-      bg: "bg-green-300",
-    },
-    yellow: {
-      text: "text-yellow-100",
-      ring: "ring-yellow-300",
-      bg: "bg-yellow-200",
-    },
-    red: {
-      text: "text-red-100",
-      ring: "ring-red-500",
-      bg: "bg-red-400",
-    },
+    inactive: "transparent",
+    active: "bg-neutral-500",
+    green: "bg-emerald-600",
+    yellow: "bg-yellow-600",
+    red: "bg-red-600",
   };
 
   function getTime(seconds) {
     let m = Math.floor(seconds / 60);
     let s = seconds % 60;
-    return {m,s};
+    return { m, s };
   }
 
   function getTimerColor(seconds) {
-    const {m,s} = getTime(seconds);
+    const { m, s } = getTime(seconds);
     // String format seconds to match the options from dropdowns for compare.
-    let sec = s
+    let sec = s;
     while (String(sec).length < 2) {
       sec = "0" + sec;
     }
@@ -198,7 +179,7 @@ function Home({ className, id, user }) {
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
         <div
           className={`${c.contentContainer} w-full h-full flex flex-col rounded-[2.5rem] py-4
-          transition-all duration-500 ${timerColor.bg} bg-opacity-35`}
+          transition-all duration-500 ${timerColor} bg-opacity-35`}
         >
           <div className="h-16 w-full flex justify-end items-center">
             <div className="relative flex me-4">
@@ -238,9 +219,7 @@ function Home({ className, id, user }) {
             className="w-full h-min flex flex-col items-center space-y-2 py-2"
           >
             {/* Timer Readout */}
-            <span
-              className={`countdown text-3xl font-semibold transition-colors duration-500 ${timerColor.text}`}
-            >
+            <span className={`countdown text-4xl font-semibold text-white`}>
               <span style={{ "--value": getTime(timer).m }}></span>:
               <span style={{ "--value": getTime(timer).s }}></span>
             </span>
@@ -301,11 +280,7 @@ function Home({ className, id, user }) {
             {/* Control Buttons */}
             <button
               disabled={!category || topicLoadCounter}
-              className={`h-14 w-full rounded-full backdrop-blur-sm bg-white ${
-                !timerActive
-                  ? "bg-opacity-[0.1] bg-white"
-                  : "bg-neutral-800 bg-opacity-80"
-              }
+              className={`h-14 w-full rounded-full backdrop-blur-sm bg-neutral-800 bg-opacity-80
                 text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
               onClick={() => onClickGenerateTopic()}
             >
@@ -316,7 +291,7 @@ function Home({ className, id, user }) {
                 className={`h-full w-full rounded-full backdrop-blur-sm  ${
                   !timerActive
                     ? "bg-opacity-[0.25] bg-green-400"
-                    : "bg-green-800 bg-opacity-80"
+                    : "bg-green-700 bg-opacity-80"
                 }
                 text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
                 onClick={() => onStartStopClick()}
@@ -328,7 +303,7 @@ function Home({ className, id, user }) {
                 className={`h-full w-full rounded-full backdrop-blur-sm  ${
                   !timerActive
                     ? "bg-opacity-[0.25] bg-red-500"
-                    : "bg-red-800 bg-opacity-80"
+                    : "bg-red-700 bg-opacity-80"
                 }
                 text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
                 onClick={() => onResetClick()}
