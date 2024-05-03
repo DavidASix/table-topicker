@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
-import { domain } from "@/config";
 import DropDown from "@/components/DropDown";
 import c from "@/assets/constants";
 
@@ -102,29 +101,7 @@ function Home({ showAlert, user }) {
   }
 
   // OnAction - Timer Controls
-  function onStartStopClick() {
-    if (interval.current) {
-      setTimerActive(false);
-      clearInterval(interval.current);
-      interval.current = null;
-    } else {
-      setTimerActive(true);
-      interval.current = setInterval(
-        () => setTimer((timer) => timer + 1),
-        1000
-      );
-    }
-  }
-
-  function onResetClick() {
-    if (interval.current) {
-      clearInterval(interval.current);
-    }
-    setTimerActive(false);
-    setTimer(0);
-  }
-
-  function onTimeDropdownChange(color, time) {
+  function onChangeTimeDropdown(color, time) {
     if (color === "green") {
       setGreen(time);
       if (yellow <= time) {
@@ -139,6 +116,29 @@ function Home({ showAlert, user }) {
     } else if (color === "red") {
       setRed(time);
     }
+  }
+
+  function onClickStartPause() {
+    if (interval.current) {
+      setTimerActive(false);
+      clearInterval(interval.current);
+      interval.current = null;
+    } else {
+      setTimerActive(true);
+      interval.current = setInterval(
+        () => setTimer((timer) => timer + 1),
+        1000
+      );
+    }
+  }
+
+  function onClickSave() {
+    showAlert('info', 'Topic Results Saved, Great Work!')
+    if (interval.current) {
+      clearInterval(interval.current);
+    }
+    setTimerActive(false);
+    setTimer(0);
   }
 
   // OnAction - Topics
@@ -238,7 +238,7 @@ function Home({ showAlert, user }) {
             <div className="w-full h-min py-1 flex flex-row justify-center items-center space-x-2">
               <select
                 value={green}
-                onChange={(e) => onTimeDropdownChange("green", e.target.value)}
+                onChange={(e) => onChangeTimeDropdown("green", e.target.value)}
                 className="select flex-1 rounded-full
                 text-white text-lg bg-green-900 hover:bg-green-800 "
               >
@@ -248,7 +248,7 @@ function Home({ showAlert, user }) {
               </select>
               <select
                 value={yellow}
-                onChange={(e) => onTimeDropdownChange("yellow", e.target.value)}
+                onChange={(e) => onChangeTimeDropdown("yellow", e.target.value)}
                 className="select flex-1 rounded-full
                 text-white text-lg bg-yellow-800 hover:bg-yellow-700 "
               >
@@ -261,7 +261,7 @@ function Home({ showAlert, user }) {
               </select>
               <select
                 value={red}
-                onChange={(e) => onTimeDropdownChange("red", e.target.value)}
+                onChange={(e) => onChangeTimeDropdown("red", e.target.value)}
                 className="select flex-1 rounded-full
                 text-white text-lg bg-red-800 hover:bg-red-700 "
               >
@@ -289,21 +289,23 @@ function Home({ showAlert, user }) {
                     : "bg-green-700 bg-opacity-80"
                 }
                 text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
-                onClick={() => onStartStopClick()}
+                onClick={() => onClickStartPause()}
               >
                 {timerActive ? "Pause" : timer ? "Resume" : "Start"}
               </button>
 
               <button
-                className={`h-full w-full rounded-full backdrop-blur-sm  ${
+                className={`h-full w-full rounded-full backdrop-blur-sm 
+                disabled:bg-neutral-600 disabled:text-neutral-400 ${
                   !timerActive
-                    ? "bg-opacity-[0.25] bg-red-500"
-                    : "bg-red-700 bg-opacity-80"
+                    ? "bg-opacity-[0.25] bg-orange-500"
+                    : "bg-orange-700 bg-opacity-80"
                 }
                 text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
-                onClick={() => onResetClick()}
+                onClick={() => onClickSave()}
+                disabled={!getTime(timer).m && !getTime(timer).s}
               >
-                Reset
+                Save
               </button>
             </div>
           </div>
