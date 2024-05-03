@@ -10,15 +10,7 @@ const links = [
   { title: "profile", icon: (props) => <MdPersonOutline {...props} /> },
   { title: "history", icon: (props) => <MdOutlineHistory {...props} /> },
 ];
-const Link = ({
-  index,
-  scrollElement,
-  scrollWidth,
-  icon,
-  title,
-  currentIndex,
-}) => {
-  const scrollDistance = scrollWidth * index;
+const Link = ({ index, icon, title, currentIndex }) => {
   const containerStyle =
     index === currentIndex
       ? "bg-orange-300"
@@ -26,15 +18,10 @@ const Link = ({
   const iconStyle =
     index === currentIndex ? "fill-orange-950" : "fill-slate-700";
   return (
-    <button
+    <a
       title={title}
       aria-label={title}
-      onClick={() => {
-        scrollElement.current.scrollTo({
-          left: scrollDistance,
-          behavior: "smooth",
-        });
-      }}
+      href={`/#${title}`}
       className={`${containerStyle} h-14 w-14 flex justify-center items-center
       rounded-full group transition-all duration-300`}
     >
@@ -42,19 +29,28 @@ const Link = ({
         size: 35,
         className: `${iconStyle} animate-all duration-500`,
       })}
-    </button>
+    </a>
   );
 };
 export default function TabNavigationBar({ className, scrollElement }) {
   const [scrollContainerWidth, setScrollContainerWidth] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   // This scroll event is used to control the indicator position of tab bar
+  const updateScrollPosition = (event) => {
+    const { scrollLeft, offsetWidth } = scrollElement.current;
+    const activeIndex = Math.round(scrollLeft / offsetWidth);
+    setCurrentIndex(activeIndex);
+  };
+  // Set initial position of the scroll indicator
   useEffect(() => {
-    const updateScrollPosition = (event) => {
-      const { scrollLeft, offsetWidth } = scrollElement.current;
-      const activeIndex = Math.round(scrollLeft / offsetWidth);
-      setCurrentIndex(activeIndex);
-    };
+    if (scrollElement.current) {
+      updateScrollPosition();
+    }
+    return () => {};
+  }, []);
+
+  // Create listener to keep updating the position of the indicator on scrolls
+  useEffect(() => {
     // event should only be triggered when the element exists
     if (scrollElement.current) {
       const pageWidth = scrollElement.current.offsetWidth;
@@ -69,6 +65,7 @@ export default function TabNavigationBar({ className, scrollElement }) {
       };
     }
   }, [scrollElement]);
+
   if (scrollElement?.current === null) {
     return null;
   }
@@ -79,14 +76,7 @@ export default function TabNavigationBar({ className, scrollElement }) {
         bg-slate-50 shadow border rounded-full`}
     >
       {links.map((link, i) => (
-        <Link
-          {...link}
-          scrollElement={scrollElement}
-          scrollWidth={scrollContainerWidth}
-          currentIndex={currentIndex}
-          index={i}
-          key={i}
-        />
+        <Link {...link} currentIndex={currentIndex} index={i} key={i} />
       ))}
     </nav>
   );

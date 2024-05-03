@@ -61,7 +61,7 @@ function App({ user_str }) {
         </header>
         <main
           className="relative flex items-start flex-1 pb-16
-              overflow-x-scroll snap-mandatory snap-x"
+              overflow-x-scroll snap-mandatory snap-x scroll-smooth"
           ref={scrollRef}
         >
           <Home

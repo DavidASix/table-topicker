@@ -43,7 +43,7 @@ function Home({ className, id, user }) {
   const interval = useRef(null);
 
   useEffect(() => {
-    const catURL = `${domain}/api/data/getCategories`;
+    const catURL = `/api/data/getCategories`;
     axios
       .get(catURL)
       .then(({ data }) => setCategories(data))
@@ -129,7 +129,7 @@ function Home({ className, id, user }) {
     //   return alert('Could not find more topics for this category, please select a new one!')
     // }
     try {
-      const url = `${domain}/api/data/getRandomQuestionInCategory`;
+      const url = `/api/data/getRandomQuestionInCategory`;
       const { data } = await axios.post(url, { category });
       setCurrentTopic(data);
     } catch (err) {
@@ -173,7 +173,7 @@ function Home({ className, id, user }) {
 
   const timerColor = timerColorScheme[getTimerColor(timer)];
   return (
-    <div className="h-full snap-center snap-always">
+    <div className="h-full snap-center snap-always" id="home">
       <UpgradeModal user={user} />
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
         <div

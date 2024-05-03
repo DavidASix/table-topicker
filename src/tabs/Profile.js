@@ -18,7 +18,6 @@ function Profile({ user, showAlert }) {
       while (!loggedIn) {
         await new Promise((resolve) => setTimeout(resolve, 5000));
         loggedIn = await checkForToken();
-        console.log({loggedIn})
       }
       // Reload ther page
       window.location.reload();
@@ -112,8 +111,8 @@ function Profile({ user, showAlert }) {
                   )}
                 </button>
                 <p className="text-center">
-                  Table Topicker uses Magic Link login, simply enter your email
-                  below then click the link in your email!
+                  {loginLoading === 'sent' && `If you have clicked the link and this page hasn't changed for 10 seconds, please refresh.`}
+                  {loginLoading !== 'sent' && `Table Topicker uses Magic Link login, simply enter your email below then click the link in your email!`}
                 </p>
                 <p className="text-sm text-neutral-500 text-center leading-snug">
                   By creating a Table Topicker account you agree to our{" "}
