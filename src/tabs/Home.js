@@ -23,6 +23,133 @@ const UpgradeModal = ({ user }) => {
   );
 };
 
+const EvaluationModal = ({
+  onCompleteEvaluation,
+  onDiscardEvaluation,
+  time,
+  topic,
+}) => {
+  function submitEval(e) {
+    e.preventDefault();
+    // Accessing the speaker radio button
+    const speakerRadio = document.querySelector('input[name="radio-10"]:checked');
+    const speaker = speakerRadio.value;  // "user" or "guest"
+  
+    // Accessing the rating radio button
+    const ratingRadio = document.querySelector('input[name="rating-9"]:checked');
+    const rating = ratingRadio.value;  // Integer between 1 and 5 (or "none")
+    console.log(speaker, rating)
+    onCompleteEvaluation(speaker, rating)
+    document.getElementById("evaluationForm").reset();
+  }
+
+  function discardEval(e) {
+    e.preventDefault();
+    onDiscardEvaluation();
+  }
+  return (
+    <dialog id="evaluation_modal" class="modal">
+      <div class="modal-box flex flex-col space-y-2">
+        <span className="text-3xl font-bold text-center">Great work!</span>
+        <span className="text-center border-b border-neutral-600 pb-4">
+          Impromptu speechs are hard, so it's important to evaluate each speech
+          so you can track your improvements. Take a moment now to reflect on
+          the speech you just gave.
+        </span>
+        <span class="text-xl">
+          <span className="text-2xl font-bold me-1 ">Duration:</span> {time}
+        </span>
+        <span class="text-xl">
+          <span className="text-2xl font-bold me-1 ">Topic:</span> {topic}
+        </span>
+        <form id="evaluationForm">
+          <span class="font-bold text-2xl">Who performed that speech?</span>
+          <label class="label cursor-pointer py-0">
+            <span class="label-text text-xl">I did</span>
+            <input
+              type="radio"
+              value="user"
+              name="radio-10"
+              class="radio checked:bg-orange-500"
+              defaultChecked
+            />
+          </label>
+          <label class="label cursor-pointer py-0">
+            <span class="label-text text-xl">Someone else did</span>
+            <input
+              type="radio"
+              value="guest"
+              name="radio-10"
+              class="radio checked:bg-orange-500"
+            />
+          </label>
+
+          <span class="font-bold text-2xl">
+            How would you rate that speech?
+          </span>
+          <div class="rating rating-lg flex justify-center">
+            <input
+              type="radio"
+              name="rating-9"
+              class="rating-hidden"
+              value="none"
+              defaultChecked
+            />
+            <input
+              type="radio"
+              value={1}
+              name="rating-9"
+              class="mask mask-star-2 bg-orange-500"
+            />
+            <input
+              type="radio"
+              value={2}
+              name="rating-9"
+              class="mask mask-star-2 bg-orange-500"
+            />
+            <input
+              type="radio"
+              value={3}
+              name="rating-9"
+              class="mask mask-star-2 bg-orange-500"
+            />
+            <input
+              type="radio"
+              value={4}
+              name="rating-9"
+              class="mask mask-star-2 bg-orange-500"
+            />
+            <input
+              type="radio"
+              value={5}
+              name="rating-9"
+              class="mask mask-star-2 bg-orange-500"
+            />
+          </div>
+          <div className="flex gap-4 pt-8">
+            <button
+              tag="button"
+              type="cancel"
+              className="flex-1 h-10 bg-red-500 text-white rounded-full"
+              onClick={discardEval}
+            >
+              Discard
+            </button>
+            <button
+              tag="button"
+              type="submit"
+              className="flex-1 h-10 bg-orange-500 text-white rounded-full"
+              onClick={submitEval}
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+  );
+};
+
 const timingOptions = [
   "0:15",
   "0:30",
@@ -66,15 +193,18 @@ function Home({ showAlert, user }) {
     return { m, s };
   }
 
-  function getBgColor(seconds) {
+  function stringTime(seconds) {
     const { m, s } = getTime(seconds);
     // String format seconds to match the options from dropdowns for compare.
     let sec = s;
     while (String(sec).length < 2) {
       sec = "0" + sec;
     }
+    return `${m}:${sec}`;
+  }
 
-    const t = `${m}:${sec}`;
+  function getBgColor(seconds) {
+    const t = stringTime(seconds);
     let status = "";
 
     if (!timerActive) {
@@ -133,12 +263,50 @@ function Home({ showAlert, user }) {
   }
 
   function onClickSave() {
-    showAlert('info', 'Topic Results Saved, Great Work!')
+    setTimerActive(false);
+    clearInterval(interval.current);
+    interval.current = null;
+    const modal = document.getElementById("evaluation_modal");
+    modal.showModal();
+  }
+
+  function clearTopic() {
     if (interval.current) {
       clearInterval(interval.current);
     }
     setTimerActive(false);
     setTimer(0);
+    setCurrentTopic(null);
+  }
+
+  async function onCompleteEvaluation(speaker, rating) {
+    const time = getTime(timer);
+    const historyInsert = {
+      date: new Date(),
+      topic: currentTopic,
+      duration: time,
+      speaker,
+      rating,
+    }
+    try {
+      console.log({historyInsert})
+      //const {data} = axios.post('/api/user/storeHistory');
+      showAlert("info", "Topic Results Saved, Great Work!");
+    } catch (err) {
+      console.log(err);
+      showAlert("error", "Could not save result")
+    } finally {
+      const modal = document.getElementById("evaluation_modal");
+      modal.close();
+      clearTopic();
+    }
+  }
+
+  function onDiscardEvaluation() {
+    const modal = document.getElementById("evaluation_modal");
+    modal.close();
+    clearTopic();
+    showAlert("warning", "Evaluation Discarded");
   }
 
   // OnAction - Topics
@@ -171,9 +339,17 @@ function Home({ showAlert, user }) {
   return (
     <div className="h-full snap-center snap-always" id="home">
       <UpgradeModal user={user} />
+      <EvaluationModal
+        onCompleteEvaluation={(speaker, rating) => onCompleteEvaluation(speaker, rating)}
+        onDiscardEvaluation={() => onDiscardEvaluation()}
+        time={stringTime(timer)}
+        topic={currentTopic?.question}
+      />
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
         <div
-          className={`${c.contentContainer} w-full h-full flex flex-col rounded-[2.5rem] py-4
+          className={`${
+            c.contentContainer
+          } w-full h-full flex flex-col rounded-[2.5rem] py-4
           transition-all duration-500 ${getBgColor(timer)} bg-opacity-45`}
         >
           <div className="h-16 w-full flex justify-end items-center">
