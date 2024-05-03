@@ -13,17 +13,20 @@ export default function LoginSuccess() {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center p-8 bg-gray-200">
-      <p className="text-4xl font-bold">Login Successful!</p>
-      <p className="text-xl font-bold">Welcome, Table Topicker!</p>
+    <div className="h-screen flex flex-col items-center justify-center p-8 bg-base-100">
+      <div className="-z-0 absolute h-full w-full doodles-light opacity-10" />
+      <p className="text-6xl font-bold mb-8 text-center">Login Successful!</p>
+      <p className="text-4xl font-regular text-center max-w-[600px]">
+        You're logged in! Please close this page and return to the other tab.
+      </p>
       {/* This must be an anchor as to create a new session instance
           so subsequent requests get cookies */}
-      <a href="/">
+      {/* Added refresher to profile page, so now people will just close this page. */}
+      {/* <a href="/">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Home
         </button>
-      </a>
+      </a> */}
     </div>
   );
 }
-

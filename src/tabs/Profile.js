@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import c from "@/assets/constants";
 
-function Profile({ className, user, showAlert }) {
+function Profile({ user, showAlert }) {
   const [email, setEmail] = useState("david@davidasix.com");
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -13,6 +13,15 @@ function Profile({ className, user, showAlert }) {
       await axios.post("/api/auth/sendMagicLink", { email });
       setLoginLoading("sent");
       showAlert("success", "Login Link Sent");
+
+      let loggedIn = false;
+      while (!loggedIn) {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        loggedIn = await checkForToken();
+        console.log({loggedIn})
+      }
+      // Reload ther page
+      window.location.reload();
     } catch (error) {
       // Handle error
       showAlert("Error sending login link, please try again.");
@@ -23,38 +32,46 @@ function Profile({ className, user, showAlert }) {
     }
   }
 
-  async function onClickLogout() {
-    console.log('On Click Logout')
+  async function checkForToken() {
     try {
-      await axios.get('/api/auth/logout');
+      await axios.get("/api/auth/checkLogin");
+      return true;
+    } catch (err) {
+      console.log(err.message);
+      return false;
+    }
+  }
+
+  async function onClickLogout() {
+    try {
+      await axios.get("/api/auth/logout");
       // Cookie is invalidated server side
-      window.location.href = "/";
+      window.location.reload();
     } catch (err) {
       showAlert("Could not logout, please try again.");
-      console.log(err)
+      console.log(err);
     }
   }
 
   return (
-    <div className="h-full snap-center snap-always">
+    <div className="h-full snap-center snap-always" id="profile">
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
         <div
           className={`${c.contentContainer} w-full h-full flex flex-col 
           backdrop-blur-sm rounded-[2.5rem] py-4 border border-neutral-800`}
         >
-          {user === null && (
+          {!user && (
             <div className="w-full h-full flex items-center justify-center p-4">
               <form
                 className="bg-transparent space-y-4 rounded-xl w-full md:w-1/2"
                 onSubmit={loginSubmit}
               >
-                <h2 className="text-5xl font-bold text-center text-white">
+                <h2 className="text-6xl font-bold text-center text-white mb-6">
                   Login
                 </h2>
-                <p className="text-center">
-                  Want infinite AI topics, Uhm & Ah counters, Topic History, and
-                  more? Sign up for a free membership today with just your
-                  email!
+                <p className="text-center text-2xl">
+                  Infinite AI Topics? Topic History? Lifetime Stats? <br />
+                  Sign up for even more features! email!
                 </p>
                 <div className="space-y-2">
                   <label htmlFor="email" className="block text-white">
@@ -94,6 +111,21 @@ function Profile({ className, user, showAlert }) {
                     "Login"
                   )}
                 </button>
+                <p className="text-center">
+                  Table Topicker uses Magic Link login, simply enter your email
+                  below then click the link in your email!
+                </p>
+                <p className="text-sm text-neutral-500 text-center leading-snug">
+                  By creating a Table Topicker account you agree to our{" "}
+                  <a href="/legal/privacy-policy" className="link-clean">
+                    Privacy Policy
+                  </a>{" "}
+                  and{" "}
+                  <a href="/legal/terms-of-service" className="link-clean">
+                    Terms of Service
+                  </a>
+                  .
+                </p>
               </form>
             </div>
           )}
