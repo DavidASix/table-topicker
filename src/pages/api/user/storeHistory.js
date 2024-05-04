@@ -23,6 +23,7 @@ export default async function handler(req, res) {
       const { db } = await connectToDatabase("users");
       const questionHistoryCol = db.collection("question-history");
       const insertData = {
+        userId: req.user._id,
         date,
         duration,
         topic,

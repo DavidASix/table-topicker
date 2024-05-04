@@ -3,6 +3,7 @@ import axios from "axios";
 
 import DropDown from "@/components/DropDown";
 import c from "@/assets/constants";
+import * as format from "@/utils/format";
 
 const UpgradeModal = ({ user }) => {
   return (
@@ -199,24 +200,8 @@ function Home({ showAlert, user }) {
   }, []);
 
   // Get Functions
-  function getTime(seconds) {
-    let m = Math.floor(seconds / 60);
-    let s = seconds % 60;
-    return { m, s };
-  }
-
-  function stringTime(seconds) {
-    const { m, s } = getTime(seconds);
-    // String format seconds to match the options from dropdowns for compare.
-    let sec = s;
-    while (String(sec).length < 2) {
-      sec = "0" + sec;
-    }
-    return `${m}:${sec}`;
-  }
-
   function getBgColor(seconds) {
-    const t = stringTime(seconds);
+    const t = format.stringElapsedTime(seconds);
     let status = "";
 
     if (!timerActive) {
@@ -292,7 +277,7 @@ function Home({ showAlert, user }) {
   }
 
   async function onCompleteEvaluation(speaker, rating) {
-    const time = getTime(timer);
+    const time = format.secondsToTime(timer);
     const historyInsert = {
       date: new Date(),
       topic: currentTopic,
@@ -360,7 +345,7 @@ function Home({ showAlert, user }) {
           onCompleteEvaluation(speaker, rating)
         }
         onDiscardEvaluation={() => onDiscardEvaluation()}
-        time={stringTime(timer)}
+        time={format.stringElapsedTime(timer)}
         topic={currentTopic?.question}
       />
       <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
@@ -409,8 +394,8 @@ function Home({ showAlert, user }) {
           >
             {/* Timer Readout */}
             <span className={`countdown text-4xl font-semibold text-white`}>
-              <span style={{ "--value": getTime(timer).m }}></span>:
-              <span style={{ "--value": getTime(timer).s }}></span>
+              <span style={{ "--value": format.secondsToTime(timer).m }}></span>:
+              <span style={{ "--value": format.secondsToTime(timer).s }}></span>
             </span>
 
             {/* Topic Selector */}
@@ -497,7 +482,7 @@ function Home({ showAlert, user }) {
                 }
                 text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
                 onClick={() => onClickSave()}
-                disabled={!getTime(timer).m && !getTime(timer).s}
+                disabled={!format.secondsToTime(timer).m && !format.secondsToTime(timer).s}
               >
                 Save
               </button>
