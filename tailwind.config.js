@@ -20,8 +20,8 @@ module.exports = {
     themes: [
       {
         topicker: {
-          primary: "#0284c7",
-          secondary: "#7dd3fc",
+          primary: "#f97316",
+          secondary: "#0e7490",
           accent: "#eab308",
           neutral: "#313131",
           "base-100": "#181818",
