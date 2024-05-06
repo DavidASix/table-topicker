@@ -32,6 +32,14 @@ function App({ user_str }) {
     setUser(initialUser);
   }, []);
 
+  async function refreshUser() {
+    try {
+      setUser((p) => ({...p}));
+    } catch (err) {
+      console.log('error updating user: ', err)
+    }
+  }
+
   function showAlert(type, msg) {
     if (!visible) {
       setAlertType(type);
@@ -66,6 +74,7 @@ function App({ user_str }) {
         >
           <Home
             user={user}
+            refreshUser={() => refreshUser()}
             showAlert={(type, msg) => showAlert(type, msg)}
             className="z-10"
           />

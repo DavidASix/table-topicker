@@ -3,7 +3,7 @@ import axios from "axios";
 import c from "@/assets/constants";
 
 function Profile({ user, showAlert }) {
-  const [email, setEmail] = useState("david@davidasix.com");
+  const [email, setEmail] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
   async function loginSubmit(event) {

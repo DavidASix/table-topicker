@@ -15,15 +15,17 @@ export default async function handler(req, res) {
       { name: "topicsPerPage", value: topicsPerPage, type: "number" },
     ]);
     try {
-      const { db } = await connectToDatabase("users");
+      const { conn, db } = await connectToDatabase("users");
       const questionHistoryCol = db.collection("question-history");
       
       const userQuestionHistory = await questionHistoryCol
         .find({ userId: req.user._id })
-        .sort({ date: 1 })
+        .sort({ date: -1 })
         .skip((page - 1) * topicsPerPage)
         .limit(topicsPerPage)
         .toArray();
+        
+      await disconnectFromDatabase(conn);
       res.status(200).json(userQuestionHistory);
     } catch (err) {
       console.error(err);

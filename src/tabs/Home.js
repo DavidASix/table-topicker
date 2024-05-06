@@ -174,7 +174,7 @@ const timingOptions = [
   "2:00",
 ];
 
-function Home({ showAlert, user }) {
+function Home({ showAlert, refreshUser, user }) {
   const [category, setCategory] = useState(false);
   const [categories, setCategories] = useState(false);
   const [currentTopic, setCurrentTopic] = useState(null);
@@ -288,6 +288,7 @@ function Home({ showAlert, user }) {
     try {
       console.log({ historyInsert });
       await axios.post("/api/user/storeHistory", historyInsert);
+      refreshUser()
       showAlert("info", "Topic Results Saved, Great Work!");
     } catch (err) {
       console.log(err.message);

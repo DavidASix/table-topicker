@@ -35,7 +35,6 @@ const auth = async (req, res, next) => {
     req.user = await userCol.findOne({ _id: id });
     await disconnectFromDatabase(conn);
     console.log('User logged in')
-    req.authenticated = true;
   } catch (error) {
     console.log("User Failed Authentication!");
     console.log(`Error: ${error.message}`);

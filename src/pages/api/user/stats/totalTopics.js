@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     await reqType(req, "GET");
     await auth(req, res);
     try {
-      const { db } = await connectToDatabase("users");
+      const { conn, db } = await connectToDatabase("users");
       const questionHistoryCol = db.collection("question-history");
 
       const result = await questionHistoryCol
@@ -25,7 +25,8 @@ export default async function handler(req, res) {
         },
         ...result.map((t) => ({ speaker: t._id, value: t.questions })),
       ];
-      
+      await disconnectFromDatabase(conn);
+
       res.status(200).json(totals);
     } catch (err) {
       console.error(err);

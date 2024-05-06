@@ -20,20 +20,20 @@ function History({ user, showAlert }) {
     setCurrentPage(1);
     // Get the initial history
     getHistory(1, topicsPerPage)
-      .then((newHistory) => setHistory(() => newHistory))
+      .then((newHistory) => {
+        setHistory(() => newHistory);
+        // Get the current total topics completed stats
+        getTopicStats()
+          .then((stats) => setTotalTopics((prev) => [...stats]))
+          .catch((e) => {
+            throw e;
+          });
+      })
       .catch((e) => {
         //showAlert("error", e?.response?.data || e.message);
         console.log("Use Effect Error:", e.message);
       })
       .finally(() => setLoadingHistory(false));
-
-    // Get the current total topics complete
-    getTopicStats()
-      .then((stats) => setTotalTopics((prev) => [...stats]))
-      .catch((e) => {
-        //showAlert("error", e?.response?.data || e.message);
-        console.log("Use Effect Error:", e.message);
-      });
   }, [user]);
 
   async function getTopicStats() {
