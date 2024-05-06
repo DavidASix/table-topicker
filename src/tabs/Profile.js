@@ -54,7 +54,7 @@ function Profile({ user, showAlert }) {
 
   return (
     <div className="h-full snap-center snap-always" id="profile">
-      <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
+      <div className={`${c.sectionPadding} relative w-screen h-full px-2 pb-16`}>
         <div
           className={`${c.contentContainer} w-full h-full flex flex-col 
           backdrop-blur-sm rounded-[2.5rem] py-4 border border-neutral-800`}

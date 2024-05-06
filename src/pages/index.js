@@ -68,7 +68,7 @@ function App({ user_str }) {
           </div>
         </header>
         <main
-          className="relative flex items-start flex-1 pb-16
+          className="relative flex items-start flex-1
               overflow-x-scroll snap-mandatory snap-x scroll-smooth"
           ref={scrollRef}
         >

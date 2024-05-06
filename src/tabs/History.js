@@ -89,9 +89,9 @@ function History({ user, showAlert }) {
     : 0;
   return (
     <div className="h-full snap-center snap-always" id="history">
-      <div className={`${c.sectionPadding} relative w-screen min-h-full px-2`}>
+      <div className={`${c.sectionPadding} relative w-screen h-full px-2 overflow-scroll`}>
         <div
-          className={`${c.contentContainer} w-full h-full flex-1 flex flex-col py-4 pb-20`}
+          className={`${c.contentContainer} w-full h-min flex-1 flex flex-col py-4 pb-16`}
         >
           <h1 className="text-6xl font-bold text-center text-white mb-6">
             History

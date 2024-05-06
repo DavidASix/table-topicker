@@ -349,7 +349,7 @@ function Home({ showAlert, refreshUser, user }) {
         time={format.stringElapsedTime(timer)}
         topic={currentTopic?.question}
       />
-      <div className={`${c.sectionPadding} relative w-screen h-full px-2`}>
+      <div className={`${c.sectionPadding} relative w-screen h-full px-2 pb-16`}>
         <div
           className={`${
             c.contentContainer
