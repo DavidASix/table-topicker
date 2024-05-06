@@ -367,6 +367,7 @@ function Home({ showAlert, refreshUser, user }) {
               />
             </div>
             <input
+              disabled={true}
               type="checkbox"
               checked={aiTopics}
               onChange={onClickAITopics}
