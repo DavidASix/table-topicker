@@ -5,11 +5,11 @@ c.titlePrefix = 'Table Topicker';
 c.url = "tabletopicker.com";
 
 c.plausible_domain = process.env.NODE_ENV === "production"
-? "redoxfordonline.com"
+? "tabletopicker.com"
 : "na";
 
 c.google_tag = process.env.NODE_ENV === "production"
-? "G-106PFJY80L"
+? "G-"
 : "na";
 
 c.api = 'https://api.tabletopicker.com'
