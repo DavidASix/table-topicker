@@ -4,6 +4,14 @@ c.siteName = "TableTopicker.com"
 c.titlePrefix = 'Table Topicker';
 c.url = "tabletopicker.com";
 
+c.plausible_domain = process.env.NODE_ENV === "production"
+? "redoxfordonline.com"
+: "na";
+
+c.google_tag = process.env.NODE_ENV === "production"
+? "G-106PFJY80L"
+: "na";
+
 c.api = 'https://api.tabletopicker.com'
 
 c.sectionPadding = "w-full px-0 md:px-4 lg:px-10 xl:px-48 2xl:px-80 flex flex-col items-center";
