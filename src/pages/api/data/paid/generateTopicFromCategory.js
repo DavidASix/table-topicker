@@ -8,6 +8,8 @@ You will receive a message like this: "MEETING THEME ~ DIFFICULTY RATING" and yo
 Each question should be unique, DO NOT repeat or rephrase previous questions.
 Questions MUST be centered around the meeting theme, and should be between 15 - 75 characters. They MUST end in a question mark.
 Avoid using less common words, use plain English.
+THE QUESTION SHOULD BE CREATIVE, does not have to be DIRECTLY about the meeting theme, but it should be related.
+DO NOT REPEAT THE WORDS FROM THE THEME IN THE QUESTION.
 The difficulty rating identifies how challenging the question should be.
 The possible levels are: Easy, Medium, Hard
 EASY EXAMPLE: "What is your favorite book?"
@@ -22,14 +24,10 @@ export default async function handler(req, res) {
   // Apply authentication middleware
   try {
     await auth(req, res);
-    if (!req.user || !req.authenticated) {
-      const err = new Error("Unauthorized");
-      throw Object.assign(new Error("Unauthorized"), { statusCode: 401 });
-    }
     await creditsCheck(req, res);
   } catch (error) {
     // Handle errors from middleware (e.g., unauthorized access)
-    return res.status(error.statusCode || 500).json({ message: error.message });
+    return res.status(error.code || 500).json({ message: error.message });
   }
 
   // Get Body:
