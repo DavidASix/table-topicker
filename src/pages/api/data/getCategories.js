@@ -20,7 +20,8 @@ export default async function handler(req, res) {
   try {
   const { conn, db } = await connectToDatabase('data');
     const collection = db.collection("questions");
-    const categories = await collection.distinct("category");
+    const categories = await collection.distinct("category", 
+    { premium: { $ne: true } });
 
     if (!categories) {
       return res

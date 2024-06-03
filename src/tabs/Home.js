@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
-import DropDown from "@/components/DropDown";
+import { FaRandom } from "react-icons/fa";
+import { LiaRandomSolid } from "react-icons/lia";
 import c from "@/assets/constants";
 import * as format from "@/utils/format";
 
@@ -179,9 +180,10 @@ function Home({ showAlert, refreshUser, user }) {
   const [categories, setCategories] = useState(false);
   const [currentTopic, setCurrentTopic] = useState(null);
   const [aiTopics, setAiTopics] = useState(false);
+  const [randomCatLoading, setRandomCatLoading] = useState(false);
   // Topic load counter serves the purpose of counting how many attempts to find a unique
   // question have been completed, as well as being a loading new topic indicator (!!topicLoadCounter)
-  const [topicLoadCounter, setTopicLoadCounter] = useState(null);
+  const [topicLoading, setTopicLoading] = useState(false);
   const [green, setGreen] = useState("0:30");
   const [yellow, setYellow] = useState("0:45");
   const [red, setRed] = useState("1:00");
@@ -288,7 +290,7 @@ function Home({ showAlert, refreshUser, user }) {
     try {
       console.log({ historyInsert });
       await axios.post("/api/user/storeHistory", historyInsert);
-      refreshUser()
+      refreshUser();
       showAlert("info", "Topic Results Saved, Great Work!");
     } catch (err) {
       console.log(err.message);
@@ -312,10 +314,25 @@ function Home({ showAlert, refreshUser, user }) {
   }
 
   // OnAction - Topics
+  async function onClickRandomCategory() {
+    try {
+      setRandomCatLoading(true);
+      const response = await axios.get("/api/data/getRandomCategory");
+      setCategory(response.data.category);
+    } catch (error) {
+      showAlert("error", "Error fetching random category");
+      console.error(error);
+    } finally {
+      setRandomCatLoading(false);
+    }
+  }
+
   async function onClickGenerateTopic() {
     if (!category) {
       return alert("Please select a category");
     }
+    setCurrentTopic(null)
+    setTopicLoading(true);
     try {
       const url = `/api/data/getRandomQuestionInCategory`;
       const { data } = await axios.post(url, { category });
@@ -323,7 +340,7 @@ function Home({ showAlert, refreshUser, user }) {
     } catch (err) {
       console.log(err);
     } finally {
-      setTopicLoadCounter(null);
+      setTopicLoading(false);
     }
   }
 
@@ -349,7 +366,9 @@ function Home({ showAlert, refreshUser, user }) {
         time={format.stringElapsedTime(timer)}
         topic={currentTopic?.question}
       />
-      <div className={`${c.sectionPadding} relative w-screen h-full px-2 pb-16`}>
+      <div
+        className={`${c.sectionPadding} relative w-screen h-full px-2 pb-16`}
+      >
         <div
           className={`${
             c.contentContainer
@@ -367,7 +386,6 @@ function Home({ showAlert, refreshUser, user }) {
               />
             </div>
             <input
-              disabled={true}
               type="checkbox"
               checked={aiTopics}
               onChange={onClickAITopics}
@@ -378,14 +396,18 @@ function Home({ showAlert, refreshUser, user }) {
             id="topic-container"
             className={`flex-1 flex flex-col justify-center items-center mx-3 my-3 mb-6 transition-all duration-500`}
           >
-            <span className="text-white font-semibold">
-              {!category
-                ? "Select a category"
-                : !currentTopic?.question
-                ? "Generate a new topic"
-                : "Your Topic"}
-            </span>
-            <span className="max-w-[800px] text-center text-4xl md:text-7xl font-normal text-white">
+            {!category && (
+              <span className="text-white font-semibold">Select a Category</span>
+            )}
+            {topicLoading && (
+              <span className="loading loading-lg loading-dots text-white"></span>
+            )}
+            {category && !topicLoading && !currentTopic?.question && (
+              <span className="text-white font-semibold">
+                Generate a new topic
+              </span>
+            )}
+            <span className="max-w-[800px] text-center text-2xl md:text-4xl font-normal text-white">
               {currentTopic?.question || ""}
             </span>
           </div>
@@ -396,7 +418,8 @@ function Home({ showAlert, refreshUser, user }) {
           >
             {/* Timer Readout */}
             <span className={`countdown text-4xl font-semibold text-white`}>
-              <span style={{ "--value": format.secondsToTime(timer).m }}></span>:
+              <span style={{ "--value": format.secondsToTime(timer).m }}></span>
+              :
               <span style={{ "--value": format.secondsToTime(timer).s }}></span>
             </span>
 
@@ -404,16 +427,43 @@ function Home({ showAlert, refreshUser, user }) {
             {aiTopics ? (
               <input type="text" />
             ) : (
-              <DropDown
-                className={
-                  "bg-white shadow-sm text-neutral-600 h-14 w-full rounded-full"
-                }
-                options={categories || []}
-                selectedOption={category}
-                defaultText="Topic Theme"
-                loading={!categories}
-                onOptionChange={(category) => setCategory(category)}
-              />
+              <div className="flex items-center w-full h-14 gap-2">
+                <select
+                  className={`w-full h-full px-4 rounded-full shadow-sm text-neutral-800
+                  select bg-white backdrop-blur-sm  ${
+                    !timerActive ? "bg-opacity-[0.65]" : "bg-opacity-90"
+                  }
+                  text-lg transition-all duration-300 enabled:hover:scale-[1.01]`}
+                  value={category || ""}
+                  onChange={(e) => setCategory(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Topic Theme
+                  </option>
+                  {!categories.length ? (
+                    <option disabled value="">
+                      Loading...
+                    </option>
+                  ) : (
+                    categories.map((category, index) => (
+                      <option key={index} value={category}>
+                        {category}
+                      </option>
+                    ))
+                  )}
+                </select>
+
+                <button
+                  onClick={onClickRandomCategory}
+                  className="btn btn-circle btn-primary btn-sm h-14 w-14 backdrop-blur-sm bg-opacity-60 border-0"
+                >
+                  {randomCatLoading ? (
+                    <span className="loading loading-spinner text-white"></span>
+                  ) : (
+                    <LiaRandomSolid className="fill-white h-8 w-auto" />
+                  )}
+                </button>
+              </div>
             )}
             {/* Timer dropdowns. Options available are defined by the next lowest timer */}
             <div className="w-full h-min py-1 flex flex-row justify-center items-center space-x-2">
@@ -455,7 +505,7 @@ function Home({ showAlert, refreshUser, user }) {
             </div>
             {/* Control Buttons */}
             <button
-              disabled={!category || topicLoadCounter}
+              disabled={!category || topicLoading}
               className={`h-14 w-full rounded-full backdrop-blur-sm bg-neutral-800 bg-opacity-80
                 text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
               onClick={() => onClickGenerateTopic()}
@@ -484,7 +534,10 @@ function Home({ showAlert, refreshUser, user }) {
                 }
                 text-2xl font-semibold text-white transition-all duration-300 enabled:hover:scale-[1.01]`}
                 onClick={() => onClickSave()}
-                disabled={!format.secondsToTime(timer).m && !format.secondsToTime(timer).s}
+                disabled={
+                  !format.secondsToTime(timer).m &&
+                  !format.secondsToTime(timer).s
+                }
               >
                 Save
               </button>
