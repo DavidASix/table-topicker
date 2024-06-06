@@ -28,6 +28,9 @@ const auth = async (req, res, next) => {
       throw new Error("No token");
     }
     const jwtUser = await validateJWT(token);
+    if (!jwtUser) {
+      throw {message: "Token Expired, Please Log in Again"}
+    } 
     // Get the updated user document from the DB
     const { conn, db } = await connectToDatabase("users");
     const userCol = db.collection("users");
@@ -39,7 +42,7 @@ const auth = async (req, res, next) => {
     console.log("User Failed Authentication!");
     console.log(`Error: ${error.message}`);
     req.user = false;
-    throw { code: 403, message: "Not Logged In" };
+    throw Object.assign(new Error(err.message || "Please log in"), { code: err.code || 401 });
   }
 };
 
