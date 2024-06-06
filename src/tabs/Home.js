@@ -317,8 +317,10 @@ function Home({ showAlert, refreshUser, user }) {
   async function onClickRandomCategory() {
     try {
       setRandomCatLoading(true);
-      const response = await axios.get("/api/data/getRandomCategory");
-      setCategory(response.data.category);
+      setCategory(() => "")
+      const url = aiTopics ? "/api/data/authenticated/getRandomAiCategory" : "/api/data/getRandomCategory";
+      const response = await axios.get(url);
+      setCategory(() => response.data.category);
     } catch (error) {
       showAlert("error", "Error fetching random category");
       console.error(error);
@@ -424,10 +426,24 @@ function Home({ showAlert, refreshUser, user }) {
             </span>
 
             {/* Topic Selector */}
-            {aiTopics ? (
-              <input type="text" />
-            ) : (
               <div className="flex items-center w-full h-14 gap-2">
+            {aiTopics ? (
+              <input
+                type="text"
+                className={`w-full h-full px-4 rounded-full shadow-sm text-neutral-800 placeholder-neutral-600
+                bg-white backdrop-blur-sm  ${
+                  !timerActive ? "bg-opacity-[0.65]" : "bg-opacity-90"
+                }
+                focus:ring-black
+                text-lg transition-all duration-300 enabled:hover:scale-[1.01] enabled:focus:scale-[1.01] focus:outline-double focus:outline-orange-400`}
+                value={category || ""}
+                maxLength={65}
+                placeholder="Enter a topic..."
+                onChange={(e) => setCategory(e.target.value)}
+               />
+
+            ) : (
+              // Dropdown non-ai selector
                 <select
                   className={`w-full h-full px-4 rounded-full shadow-sm text-neutral-800
                   select bg-white backdrop-blur-sm  ${
@@ -452,6 +468,7 @@ function Home({ showAlert, refreshUser, user }) {
                     ))
                   )}
                 </select>
+            )}
 
                 <button
                   onClick={onClickRandomCategory}
@@ -464,7 +481,6 @@ function Home({ showAlert, refreshUser, user }) {
                   )}
                 </button>
               </div>
-            )}
             {/* Timer dropdowns. Options available are defined by the next lowest timer */}
             <div className="w-full h-min py-1 flex flex-row justify-center items-center space-x-2">
               <select
