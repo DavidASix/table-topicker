@@ -5,16 +5,17 @@ import validateInput from "@/middleware/validateInput";
 import { connectToDatabase, disconnectFromDatabase } from "@/utils/database";
 
 export default async function handler(req, res) {
+  const { category, question } = req.body;
   try {
     await reqType(req, "POST");
     await auth(req, res);
     if (!req.user) {
         throw { code: 405, message: "Incorrect request type" };
     }
-    const { category, topic } = req.body;
+    console.log({category, question})
     await validateInput([
       {name: 'category', value: category, type: 'string'},
-      {name: 'topic', value: topic, type: 'string'},
+      {name: 'question', value: question, type: 'string'},
     ])
   } catch (error) {
     // Handle errors from middleware (e.g., unauthorized access)
@@ -26,21 +27,21 @@ export default async function handler(req, res) {
     const questionColl = dataDb.db.collection("questions");
     // Check if the question exists
     // If it doesn't, insert the question into the question collection
-    let question = await questionColl.findOne({
+    let topic = await questionColl.findOne({
       category,
-      question: topic,
+      question
     });
-    if (!question) {
-      question = {
-        category: category,
-        question: topic,
+    if (!topic) {
+      topic = {
+        category,
+        question,
         premium: true,
       };
-      const { insertedId } = await questionColl.insertOne(question);
-      question._id = insertedId;
+      const { insertedId } = await questionColl.insertOne(topic);
+      topic._id = insertedId;
     }
     await disconnectFromDatabase(dataDb.conn);
-    
+    /*
     // Insert the question into the user question history
     const userDb = await connectToDatabase("users");
     const questionHistoryColl = userDb.db.collection("question-history");
@@ -49,11 +50,11 @@ export default async function handler(req, res) {
     await questionHistoryColl.insertOne({
       userId: req.user._id,
       date,
-      question: question,
+      question: topic,
     });
     await disconnectFromDatabase(userDb.conn);
-
-    res.status(200).end();
+  */
+    res.status(200).json({success: true});
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: err.message });

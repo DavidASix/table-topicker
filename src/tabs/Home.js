@@ -25,6 +25,28 @@ const UpgradeModal = ({ user }) => {
   );
 };
 
+const AiOptionModal = ({ options, selectOption }) => {
+  return (
+    <dialog id="ai_option_modal" class="modal">
+      <div class="modal-box space-y-4">
+        <h3 class="font-bold text-xl">Select your preferred topic</h3>
+        {options.map((o, i) => (
+          <button 
+            onClick={() => selectOption(o)}
+            key={i} 
+            className="w-100 p-4 bg-neutral-800 rounded-lg
+            transition-colors duration-150 hover:bg-orange-800 text-lg">
+              {o}
+          </button>
+        ))}
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+  );
+};
+
 const EvaluationModal = ({
   onCompleteEvaluation,
   onDiscardEvaluation,
@@ -180,9 +202,8 @@ function Home({ showAlert, refreshUser, user }) {
   const [categories, setCategories] = useState(false);
   const [currentTopic, setCurrentTopic] = useState(null);
   const [aiTopics, setAiTopics] = useState(false);
+  const [aiOptions, setAiOptions] = useState([])
   const [randomCatLoading, setRandomCatLoading] = useState(false);
-  // Topic load counter serves the purpose of counting how many attempts to find a unique
-  // question have been completed, as well as being a loading new topic indicator (!!topicLoadCounter)
   const [topicLoading, setTopicLoading] = useState(false);
   const [green, setGreen] = useState("0:30");
   const [yellow, setYellow] = useState("0:45");
@@ -335,13 +356,51 @@ function Home({ showAlert, refreshUser, user }) {
     }
     setCurrentTopic(null)
     setTopicLoading(true);
+    if (aiTopics) {
+      const difficulty = "Hard"
+      try {
+        const url = `/api/data/authenticated/generateTopicFromCategory`;
+        const { data } = await axios.post(url, { category, difficulty });
+        setAiOptions([...data.topics])
+        const modal = document.getElementById("ai_option_modal");
+        modal.showModal();
+      } catch (err) {
+        const msg = err?.response?.data?.message || err.message
+        console.log(msg)
+        showAlert("error", msg)
+        setTopicLoading(false);
+      }
+    } else {
+      try {
+        const url = `/api/data/getRandomQuestionInCategory`;
+        const { data } = await axios.post(url, { category });
+        setCurrentTopic(data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setTopicLoading(false);
+      }
+    }
+  }
+
+  async function onSelectAiOption(option) {
+    // Set the AI topic, and close the modal
+    const topic = { category, question: option}
+    const modal = document.getElementById("ai_option_modal");
+    modal.close();
+    // Attempt to save the topic to the server
     try {
-      const url = `/api/data/getRandomQuestionInCategory`;
-      const { data } = await axios.post(url, { category });
-      setCurrentTopic(data);
+      const url = `/api/data/authenticated/userSelectedTopic`;
+      await axios.post(url, topic);
+      refreshUser()
     } catch (err) {
-      console.log(err);
+      console.log('Error selecing AI topic')
+      const msg = err?.response?.data?.message || err.message;
+      console.log(msg)
+      showAlert("error", msg)
+      setTopicLoading(false);
     } finally {
+      setCurrentTopic(topic);
       setTopicLoading(false);
     }
   }
@@ -354,12 +413,16 @@ function Home({ showAlert, refreshUser, user }) {
     } else {
       // Check if tokens available, or show upgrade modal
       setAiTopics((prev) => !prev);
+      setCurrentTopic(null)
     }
   }
 
   return (
     <div className="h-full snap-center snap-always" id="home">
       <UpgradeModal user={user} />
+      <AiOptionModal 
+        options={aiOptions} 
+        selectOption={onSelectAiOption} />
       <EvaluationModal
         onCompleteEvaluation={(speaker, rating) =>
           onCompleteEvaluation(speaker, rating)
