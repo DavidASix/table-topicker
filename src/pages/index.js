@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import axios from 'axios';
 import Home from "@/tabs/Home";
 import Profile from "@/tabs/Profile";
 import History from "@/tabs/History";
@@ -34,7 +35,8 @@ function App({ user_str }) {
 
   async function refreshUser() {
     try {
-      setUser((p) => ({...p}));
+      const {data} = await axios.get('/api/user/getUserObject');
+      setUser((p) => ({...data}));
     } catch (err) {
       console.log('error updating user: ', err)
     }
