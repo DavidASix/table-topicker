@@ -65,7 +65,7 @@ function App({ user_str }) {
           </span>
           <div>
             <span className="font-light text-xl text-white">
-              {user?.credits || 0} Credits
+              {user?.credits || 0} AI Credits
             </span>
           </div>
         </header>

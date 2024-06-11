@@ -70,7 +70,7 @@ function Profile({ user, showAlert }) {
                 </h2>
                 <p className="text-center text-2xl">
                   Infinite AI Topics? Topic History? Lifetime Stats? <br />
-                  Sign up for even more features! email!
+                  Sign up for even more features!
                 </p>
                 <div className="space-y-2">
                   <label htmlFor="email" className="block text-white">
@@ -81,6 +81,7 @@ function Profile({ user, showAlert }) {
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    placeholder="yourname@gmail.com"
                     className="rounded-lg border border-gray-300 w-full px-3 py-2 focus:outline-none focus:border-blue-500 bg-white/30 text-white"
                     required
                   />

@@ -76,7 +76,6 @@ function History({ user, showAlert }) {
   // Pagination functions:
   // Write API route to get total questions
   // if current question count is less than total questions, fetch next page then update current page var
-  console.log({totalTopics})
   const completeTopics = totalTopics ? totalTopics.total : 0;
   const completeUserTopics = totalTopics ? totalTopics.user : 0;
   const completeGuestTopics =  totalTopics ? totalTopics.guest : 0;;
