@@ -20,20 +20,18 @@ function History({ user, showAlert }) {
     setCurrentPage(1);
     // Get the initial history
     getHistory(1, topicsPerPage)
-      .then((newHistory) => {
-        setHistory(() => newHistory);
-        // Get the current total topics completed stats
-        getTopicStats()
-          .then((stats) => setTotalTopics((prev) => [...stats]))
-          .catch((e) => {
-            throw e;
-          });
-      })
+      .then((newHistory) => setHistory(() => newHistory))
       .catch((e) => {
-        //showAlert("error", e?.response?.data || e.message);
         console.log("Use Effect Error:", e.message);
       })
       .finally(() => setLoadingHistory(false));
+
+    // Get the current total topics completed stats
+    getTopicStats()
+      .then((stats) => setTotalTopics((prev) => stats))
+      .catch((e) => {
+        console.log('Error getting total topics')
+      });
   }, [user]);
 
   async function getTopicStats() {
@@ -41,7 +39,7 @@ function History({ user, showAlert }) {
       const { data } = await axios.get("/api/user/stats/totalTopics");
       return data;
     } catch (err) {
-      console.log(err);
+      console.log('Error getting total topics.');
       throw err;
     }
   }
@@ -78,15 +76,10 @@ function History({ user, showAlert }) {
   // Pagination functions:
   // Write API route to get total questions
   // if current question count is less than total questions, fetch next page then update current page var
-  const completeTopics = totalTopics
-    ? totalTopics.filter((v) => v.speaker === "total")[0].value
-    : 0;
-  const completeUserTopics = totalTopics
-    ? totalTopics.filter((v) => v.speaker === "user")[0].value
-    : 0;
-  const completeGuestTopics = totalTopics
-    ? totalTopics.filter((v) => v.speaker === "guest")[0].value
-    : 0;
+  console.log({totalTopics})
+  const completeTopics = totalTopics ? totalTopics.total : 0;
+  const completeUserTopics = totalTopics ? totalTopics.user : 0;
+  const completeGuestTopics =  totalTopics ? totalTopics.guest : 0;;
   return (
     <div className="h-full snap-center snap-always" id="history">
       <div className={`${c.sectionPadding} relative w-screen h-full px-2 overflow-scroll`}>

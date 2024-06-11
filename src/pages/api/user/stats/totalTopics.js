@@ -18,15 +18,20 @@ export default async function handler(req, res) {
           { $group: { _id: "$speaker", questions: { $sum: 1 } } },
         ])
         .toArray();
-      const totals = [
-        {
-          speaker: "total",
-          value: result.reduce((p, c) => p.questions + c.questions),
-        },
-        ...result.map((t) => ({ speaker: t._id, value: t.questions })),
-      ];
+      // Result returns :
+      // [ { _id: 'guest', questions: 4 }, { _id: 'user', questions: 10 } ]
+      const total = result.reduce((total, c) => total + c.questions, 0);
+      const totals = {
+          total,
+          // Initialize zero values for user and guest
+          user: 0,
+          guest: 0,
+          // Iterate over whatever was retrieved from db
+          // destructure the reduced object, whether empty or containing 
+          // overwrite data for user and guest
+          ...result.reduce((acc, v, i) => ({...acc, [v._id]: v.questions}), {})
+        };
       await disconnectFromDatabase(conn);
-
       res.status(200).json(totals);
     } catch (err) {
       console.error(err);
