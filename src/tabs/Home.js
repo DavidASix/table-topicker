@@ -8,17 +8,17 @@ import * as format from "@/utils/format";
 
 const UpgradeModal = ({ user }) => {
   return (
-    <dialog id="upgrade_modal" class="modal">
-      <div class="modal-box">
-        <h3 class="font-bold text-lg">Get inifnite topics with AI</h3>
-        <p class="py-4">
+    <dialog id="upgrade_modal" className="modal">
+      <div className="modal-box">
+        <h3 className="font-bold text-lg">Get inifnite topics with AI</h3>
+        <p className="py-4">
           {!user &&
             "Create an account on the Profile page to get start with infinite topics about any theme you can imagine."}
           {user?.credits === 0 &&
             `You currently have ${user.credits} credits. Purchase credits on the Profile page to generate infinite topics about any theme you can imagine.`}
         </p>
       </div>
-      <form method="dialog" class="modal-backdrop">
+      <form method="dialog" className="modal-backdrop">
         <button>close</button>
       </form>
     </dialog>
@@ -27,9 +27,9 @@ const UpgradeModal = ({ user }) => {
 
 const AiOptionModal = ({ options, selectOption }) => {
   return (
-    <dialog id="ai_option_modal" class="modal">
-      <div class="modal-box space-y-4">
-        <h3 class="font-bold text-xl">Select your preferred topic</h3>
+    <dialog id="ai_option_modal" className="modal">
+      <div className="modal-box space-y-4">
+        <h3 className="font-bold text-xl">Select your preferred topic</h3>
         {options.map((o, i) => (
           <button 
             onClick={() => selectOption(o)}
@@ -40,7 +40,7 @@ const AiOptionModal = ({ options, selectOption }) => {
           </button>
         ))}
       </div>
-      <form method="dialog" class="modal-backdrop">
+      <form method="dialog" className="modal-backdrop">
         <button>close</button>
       </form>
     </dialog>
@@ -79,50 +79,50 @@ const EvaluationModal = ({
     onDiscardEvaluation();
   }
   return (
-    <dialog id="evaluation_modal" class="modal">
-      <div class="modal-box flex flex-col space-y-2">
+    <dialog id="evaluation_modal" className="modal">
+      <div className="modal-box flex flex-col space-y-2">
         <span className="text-3xl font-bold text-center">Great work!</span>
         <span className="text-center border-b border-neutral-600 pb-4">
           Impromptu speechs are hard, so it's important to evaluate each speech
           so you can track your improvements. Take a moment now to reflect on
           the speech you just gave.
         </span>
-        <span class="text-xl">
+        <span className="text-xl">
           <span className="text-2xl font-bold me-1 ">Duration:</span> {time}
         </span>
-        <span class="text-xl">
+        <span className="text-xl">
           <span className="text-2xl font-bold me-1 ">Topic:</span> {topic}
         </span>
         <form id="evaluationForm">
-          <span class="font-bold text-2xl">Who performed that speech?</span>
-          <label class="label cursor-pointer py-0">
-            <span class="label-text text-xl">I did</span>
+          <span className="font-bold text-2xl">Who performed that speech?</span>
+          <label className="label cursor-pointer py-0">
+            <span className="label-text text-xl">I did</span>
             <input
               type="radio"
               value="user"
               name="radio-10"
-              class="radio checked:bg-orange-500"
+              className="radio checked:bg-orange-500"
               defaultChecked
             />
           </label>
-          <label class="label cursor-pointer py-0">
-            <span class="label-text text-xl">Someone else did</span>
+          <label className="label cursor-pointer py-0">
+            <span className="label-text text-xl">Someone else did</span>
             <input
               type="radio"
               value="guest"
               name="radio-10"
-              class="radio checked:bg-orange-500"
+              className="radio checked:bg-orange-500"
             />
           </label>
 
-          <span class="font-bold text-2xl">
+          <span className="font-bold text-2xl">
             How would you rate that speech?
           </span>
-          <div class="rating rating-lg flex justify-center">
+          <div className="rating rating-lg flex justify-center">
             <input
               type="radio"
               name="rating-9"
-              class="rating-hidden"
+              className="rating-hidden"
               value="none"
               defaultChecked
             />
@@ -130,31 +130,31 @@ const EvaluationModal = ({
               type="radio"
               value={1}
               name="rating-9"
-              class="mask mask-star-2 bg-orange-500"
+              className="mask mask-star-2 bg-orange-500"
             />
             <input
               type="radio"
               value={2}
               name="rating-9"
-              class="mask mask-star-2 bg-orange-500"
+              className="mask mask-star-2 bg-orange-500"
             />
             <input
               type="radio"
               value={3}
               name="rating-9"
-              class="mask mask-star-2 bg-orange-500"
+              className="mask mask-star-2 bg-orange-500"
             />
             <input
               type="radio"
               value={4}
               name="rating-9"
-              class="mask mask-star-2 bg-orange-500"
+              className="mask mask-star-2 bg-orange-500"
             />
             <input
               type="radio"
               value={5}
               name="rating-9"
-              class="mask mask-star-2 bg-orange-500"
+              className="mask mask-star-2 bg-orange-500"
             />
           </div>
           <div className="flex gap-4 pt-8">
