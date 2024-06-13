@@ -56,7 +56,7 @@ export default async function handler(req, res) {
         email,
         accountCreationDate: new Date(),
         firstLogin: true,
-        credits: 10
+        credits: 2
       };
       const newUser = await userCol.insertOne(newUserInsert);
       userId = newUser.insertedId;

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import Head from 'next/head';
 import axios from 'axios';
 import Home from "@/tabs/Home";
 import Profile from "@/tabs/Profile";
@@ -53,6 +54,9 @@ function App({ user_str }) {
   
   return (
     <>
+    <Head>
+      <title>TableTopicker</title>
+    </Head>
       <div
         className="bg-base-100
         relative h-screen w-screen flex flex-col overflow-hidden"
