@@ -42,7 +42,7 @@ const auth = async (req, res, next) => {
     console.log("User Failed Authentication!");
     console.log(`Error: ${error.message}`);
     req.user = false;
-    throw Object.assign(new Error(err.message || "Please log in"), { code: err.code || 401 });
+    throw Object.assign(new Error(error.message || "Please log in"), { code: error.code || 401 });
   }
 };
 
