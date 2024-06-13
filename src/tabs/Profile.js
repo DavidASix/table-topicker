@@ -2,6 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import c from "@/assets/constants";
 
+const pricePerCreditByQuantity = {
+  10: 25,
+  25: 20,
+  100: 10,
+  250: 8
+};
+
 function Profile({ user, showAlert }) {
   const [email, setEmail] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
@@ -131,39 +138,36 @@ function Profile({ user, showAlert }) {
           )}
 
           {user && (
-            <>
+            <div className="flex flex-col space-y-4">
               <div className="px-2 py-4 w-full flex flex-col">
                 <span className="text-white text-sm font-bold">Email:</span>
                 <span className="text-white text-xl ms-4">{user.email}</span>
               </div>
-              <div className="w-full grid grid-cols-2 space-y-4 md:space-y-0">
-                <div className="flex justify-center items-center col-span-2 md:col-span-1">
-                  <button
-                    className="min-w-64 px-4 h-10 rounded-3xl
-                text-lg font-light text-neutral-900
-                bg-white shadow hover:shadow-lg hover:scale-[1.01]
-                transition-all duration-300"
-                    onClick={() =>
-                      alert("Functionality not implemented, sorry!")
-                    }
-                  >
-                    Purchase Credits
-                  </button>
-                </div>
 
-                <div className="flex justify-center items-center col-span-2 md:col-span-1">
-                  <button
+                {Object.keys(pricePerCreditByQuantity).map((k,i) => (
+                  <a
                     className="min-w-64 px-4 h-10 rounded-3xl
-                text-lg font-light text-neutral-900
-                bg-white shadow hover:shadow-lg hover:scale-[1.01]
-                transition-all duration-300"
-                    onClick={() => onClickLogout()}
+                    text-lg font-light text-neutral-900
+                    bg-white shadow hover:shadow-lg hover:scale-[1.01]
+                    transition-all duration-300"
+                    href={`/api/payment/purchase?q=${k}`}
                   >
-                    Logout
-                  </button>
-                </div>
-              </div>
-            </>
+                    Purchase {k} Credits ${pricePerCreditByQuantity[k] * k / 100} ({pricePerCreditByQuantity[k]}¢ each)
+                  </a>
+                ))}
+                  
+
+                  <button
+                  className="min-w-64 px-4 h-10 rounded-3xl
+                    text-lg font-light text-neutral-900
+                    bg-white shadow hover:shadow-lg hover:scale-[1.01]
+                    transition-all duration-300"
+                  onClick={() => onClickLogout()}
+                >
+                  Logout
+                </button>
+              
+            </div>
           )}
         </div>
       </div>

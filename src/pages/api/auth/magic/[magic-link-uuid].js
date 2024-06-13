@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     const jwt = generateJWT(user);
     res.setHeader(
       "Set-Cookie",
-      `jwt=${jwt}; HttpOnly; Secure; SameSite=Strict; Path=/`
+      `jwt=${jwt}; HttpOnly; Secure; SameSite=None; Path=/`
     );
 
     await disconnectFromDatabase(conn);
