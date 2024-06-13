@@ -1,13 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import c from "@/assets/constants";
+import SmallCoins from '/public/coins/sm_coins.svg';
+import MediumCoin from '/public/coins/md_coins.svg';
+import LargeCoins from '/public/coins/lg_coins.svg';
+import XLCoins from '/public/coins/xl_coins.svg';
 
 const pricePerCreditByQuantity = {
-  10: 25,
-  25: 20,
-  100: 10,
-  250: 8
+  10: {pricePerCredit: 25, icon: (props) => <SmallCoins {...props} />,},
+  25: {pricePerCredit: 20, icon: (props) => <MediumCoin {...props} />,},
+  100: {pricePerCredit: 10, icon: (props) => <LargeCoins {...props} />,},
+  250: {pricePerCredit: 8, icon: (props) => <XLCoins {...props} />,},
 };
+
+let CAD = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'CAD',
+});
 
 function Profile({ user, showAlert }) {
   const [email, setEmail] = useState("");
@@ -63,8 +72,8 @@ function Profile({ user, showAlert }) {
     <div className="h-full snap-center snap-always" id="profile">
       <div className={`${c.sectionPadding} relative w-screen h-full px-2 pb-16`}>
         <div
-          className={`${c.contentContainer} w-full h-full flex flex-col 
-          backdrop-blur-sm rounded-[2.5rem] py-4 border border-neutral-800`}
+          className={`${c.contentContainer} w-full h-full flex flex-col overflow-scroll
+          backdrop-blur-sm rounded-[2.5rem] pt-4 pb-8 border border-neutral-800 justify-between`}
         >
           {!user && (
             <div className="w-full h-full flex items-center justify-center p-4">
@@ -138,36 +147,78 @@ function Profile({ user, showAlert }) {
           )}
 
           {user && (
-            <div className="flex flex-col space-y-4">
-              <div className="px-2 py-4 w-full flex flex-col">
-                <span className="text-white text-sm font-bold">Email:</span>
-                <span className="text-white text-xl ms-4">{user.email}</span>
+            <React.Fragment>
+              <div className="flex flex-col space-y-1 pb-8 ">
+                <div className="w-100 flex justify-between items-center mt-2">
+                  <h2 className="text-5xl font-semibold">Profile</h2>
+                  <span className="text-5xl">
+                    💬
+                  </span>
+                </div>
+                <div className="px-2 py-4 w-full flex flex-col">
+                  <span className="text-white text-sm font-bold">Email:</span>
+                  <span className="text-white text-xl ms-4">{user.email}</span>
+                </div>
+
+                <div 
+                  className="w-100 flex justify-between items-center pt-4">
+                  <h2 className="text-5xl font-semibold relative">
+                    Credits
+                    <span 
+                      className="absolute -top-4 -right-4 text-base tooltip tooltip-primary cursor-pointer"
+                      data-tip="One credit allows you to generate a single AI Table Topic from a category you choose.">
+                    ℹ️
+                    </span>
+                  </h2>
+                  <span className="text-5xl">
+                    🪙
+                  </span>
+                </div>
+                <p className="text-2xl pt-4">
+                  You currently have <b className="text-primary">{user.credits || 0}</b> credits.
+                </p>
+                <p className="text-2xl pt-2">
+                  Credits allow you to generate a topic for any category using AI. 
+                  Purchase more credits to continue practicing your speaking skills!<br />
+                </p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 content-start px-2 py-4">
+                  {Object.keys(pricePerCreditByQuantity).map((k,i) => {
+                    const Icon = (props) => pricePerCreditByQuantity[k].icon(props);
+                    return (
+                    <div 
+                      key={k}
+                      className="flex flex-row justify-between items-center lg:px-2">
+                      <div className="flex space-x-4 justify-start items-center">
+                        <Icon className="h-16 w-auto" />
+                        <span className="flex flex-col justify-center">
+                          <span className="text-2xl whitespace-nowrap">
+                            <b>{k}</b> Credits
+                          </span>
+                          <span className="text-sm">
+                            {pricePerCreditByQuantity[k].pricePerCredit}¢ per credit 
+                          </span>
+                        </span>
+                      </div>
+                      <a
+                        className="h-12 w-32 sm:w-56 lg:w-32 rounded-3xl 
+                          text-lg font-bold text-white
+                          btn btn-primary"
+                        href={`/api/payment/purchase?q=${k}`}
+                      >
+                        {CAD.format(pricePerCreditByQuantity[k].pricePerCredit * k / 100).slice(2)}
+                      </a>
+                    </div>
+                    )}
+                  )}
+                </div>
               </div>
-
-                {Object.keys(pricePerCreditByQuantity).map((k,i) => (
-                  <a
-                    className="min-w-64 px-4 h-10 rounded-3xl
-                    text-lg font-light text-neutral-900
-                    bg-white shadow hover:shadow-lg hover:scale-[1.01]
-                    transition-all duration-300"
-                    href={`/api/payment/purchase?q=${k}`}
-                  >
-                    Purchase {k} Credits ${pricePerCreditByQuantity[k] * k / 100} ({pricePerCreditByQuantity[k]}¢ each)
-                  </a>
-                ))}
-                  
-
-                  <button
-                  className="min-w-64 px-4 h-10 rounded-3xl
-                    text-lg font-light text-neutral-900
-                    bg-white shadow hover:shadow-lg hover:scale-[1.01]
-                    transition-all duration-300"
-                  onClick={() => onClickLogout()}
-                >
-                  Logout
-                </button>
-              
-            </div>
+            <button
+              className="min-w-64 h-12 btn btn-outline btn-ghost rounded-full text-lg font-light"
+              onClick={() => onClickLogout()}
+            >
+              Logout
+            </button>
+          </React.Fragment>
           )}
         </div>
       </div>
