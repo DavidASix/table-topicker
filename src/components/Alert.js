@@ -87,7 +87,7 @@ function AlertMessage({ visible, message, type }) {
 
   return (
     <div
-      className={`w-full p-4 absolute z-50 top-0 transition-all duration-400 ${
+      className={`w-full p-4 absolute z-50 bottom-0 transition-all duration-400 ${
         visible ? "translate-y-0" : "-translate-y-full opacity-0"
       }`}
     >
