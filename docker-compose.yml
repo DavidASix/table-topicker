@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432" # Changed from 5432:5432 to avoid port conflict
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=table-topicker
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+  app:
+    build:
+      context: .
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/table-topicker
+      - AUTH_SECRET=${AUTH_SECRET}
+      - AUTH_RESEND_KEY=${AUTH_RESEND_KEY}
+      - MAILER_ADDRESS=${MAILER_ADDRESS}
+    volumes:
+      - .:/app # Mount current directory to /app in container
+    depends_on:
+      - db
+volumes:
+  db_data:
