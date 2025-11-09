@@ -7,6 +7,7 @@ import {
   text,
   timestamp,
   varchar,
+  uuid,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -18,7 +19,7 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 
 export const users = pgTable("user", {
-  id: varchar("id", { length: 255 })
+  id: uuid("id")
     .notNull()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
@@ -38,7 +39,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const accounts = pgTable(
   "account",
   {
-    userId: varchar("userId", { length: 255 })
+    userId: uuid("userId")
       .notNull()
       .references(() => users.id),
     type: varchar("type", { length: 255 })
@@ -70,7 +71,7 @@ export const sessions = pgTable(
     sessionToken: varchar("sessionToken", { length: 255 })
       .notNull()
       .primaryKey(),
-    userId: varchar("userId", { length: 255 })
+    userId: uuid("userId")
       .notNull()
       .references(() => users.id),
     expires: timestamp("expires", {
