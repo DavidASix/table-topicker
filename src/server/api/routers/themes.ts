@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { db } from "~/server/db";
-import { themes } from "~/server/db/tables";
+import { themes } from "~/server/db/schema/tables";
 
 export const themesRouter = createTRPCRouter({
   selectSystemThemes: publicProcedure.input(z.object({})).query(async () => {
