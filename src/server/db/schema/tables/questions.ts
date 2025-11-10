@@ -1,7 +1,7 @@
 import { pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { users } from "./auth";
 import { themes } from "./themes";
-import { contentTypeEnum } from "~/server/db/types";
+import { contentTypeEnum } from "../common";
 
 const difficultyLevels = pgEnum("difficulty_levels", [
   "easy",
