@@ -8,7 +8,7 @@ import { questions, themes } from "~/server/db/schema/tables";
 export const questionsRouter = createTRPCRouter({
   selectRandomByTheme: publicProcedure
     .input(z.object({ themeId: z.string().uuid() }))
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       try {
         const themeExists = await db
           .select()
