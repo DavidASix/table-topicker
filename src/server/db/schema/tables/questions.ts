@@ -3,7 +3,7 @@ import { users } from "./auth";
 import { themes } from "./themes";
 import { contentTypeEnum } from "../common";
 
-const difficultyLevels = pgEnum("difficulty_levels", [
+export const difficultyLevels = pgEnum("difficulty_levels", [
   "easy",
   "medium",
   "hard",
