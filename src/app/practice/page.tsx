@@ -1,93 +1,94 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import { BookOpen, History } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-import { Button } from "~/components/ui/button";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "~/components/ui/field";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import { api } from "~/trpc/react";
+import { DockMenu } from "./_components/dock-menu";
+import { HistoryScreen } from "./_components/history-screen";
+import { PracticeScreen } from "./_components/practice-screen";
+import type { NonEmptyArray } from "~/lib/types";
+import { cn } from "~/lib/utils";
 
-const practiceFormSchema = z.object({
-  themeId: z.string().uuid({ message: "Please select a theme" }),
-});
+type ScreenConfig = {
+  id: string;
+  title: string;
+  icon: LucideIcon;
+  component: React.ComponentType;
+};
 
-type PracticeFormValues = z.infer<typeof practiceFormSchema>;
+export const screens: NonEmptyArray<ScreenConfig> = [
+  {
+    id: "practice",
+    title: "Practice",
+    icon: BookOpen,
+    component: PracticeScreen,
+  },
+  {
+    id: "history",
+    title: "History",
+    icon: History,
+    component: HistoryScreen,
+  },
+];
 
 export default function PracticePage() {
-  const themes = api.themes.selectSystemThemes.useQuery({});
+  const [activeScreenId, setActiveScreenId] = useState<string>(screens[0].id);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<PracticeFormValues>({
-    resolver: zodResolver(practiceFormSchema),
-  });
+  // Set up Intersection Observer to track active screen
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+            const screenId = entry.target.id;
+            setActiveScreenId(screenId);
+          }
+        });
+      },
+      {
+        threshold: 0.5,
+        root: null,
+      },
+    );
 
-  const questionMutation = api.questions.selectRandomByTheme.useMutation();
+    // Observe all screen elements
+    screens.forEach((screen) => {
+      const element = document.getElementById(screen.id);
+      if (element) {
+        observer.observe(element);
+      }
+    });
 
-  const onSubmit = (data: PracticeFormValues) => {
-    questionMutation.mutate({ themeId: data.themeId });
-  };
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-3xl font-bold">Practice Questions</h1>
+    <div className="relative h-screen overflow-hidden">
+      <div
+        ref={containerRef}
+        className="hide-scrollbar flex h-full snap-x snap-mandatory overflow-x-scroll scroll-smooth"
+      >
+        {screens.map((screen) => {
+          const ScreenComponent = screen.component;
+          return (
+            <div
+              key={screen.id}
+              id={screen.id}
+              className={cn(
+                "flex flex-col items-center justify-start",
+                "min-h-screen w-screen shrink-0 snap-start overflow-x-clip overflow-y-auto",
+                "py-4",
+              )}
+            >
+              <ScreenComponent />
+            </div>
+          );
+        })}
+      </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md space-y-6">
-        <Controller
-          name="themeId"
-          control={control}
-          render={({ field }) => (
-            <Field>
-              <FieldLabel>Theme</FieldLabel>
-              <FieldContent>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  disabled={themes.isLoading}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a theme" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {themes?.data?.map((theme) => (
-                      <SelectItem key={theme.id} value={theme.id}>
-                        {theme.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FieldError errors={errors.themeId ? [errors.themeId] : []} />
-              </FieldContent>
-            </Field>
-          )}
-        />
-
-        <Button type="submit" disabled={questionMutation.isPending}>
-          Get Question
-        </Button>
-      </form>
-
-      {questionMutation.data && (
-        <div className="mt-8 rounded-lg border p-6">
-          <h2 className="mb-4 text-xl font-semibold">Your Question:</h2>
-          <p className="text-lg">{questionMutation.data.question}</p>
-        </div>
-      )}
+      <DockMenu activeScreenId={activeScreenId} />
     </div>
   );
 }
