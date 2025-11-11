@@ -5,6 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "~/components/ui/button";
+import { Card, CardContent } from "~/components/ui/card";
 import {
   Field,
   FieldContent,
@@ -44,10 +45,31 @@ export function PracticeScreen() {
   };
 
   return (
-    <div className="container flex-1">
-      <h1 className="mb-8 text-3xl font-bold">Practice Questions</h1>
+    <div className="container flex flex-1 flex-col items-center justify-start">
+      <div>
+        <h1 className="mb-4 text-3xl font-bold">Practice Screen</h1>
+      </div>
+      <div className="flex flex-1 items-center justify-center">
+        <Card>
+          <CardContent>
+            {questionMutation.data ? (
+              <>
+                <h2 className="text-xl font-semibold">Your Question:</h2>
+                <p className="text-lg">{questionMutation.data.question}</p>
+              </>
+            ) : (
+              <p className="text-muted-foreground">
+                Select a topic to get started.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md space-y-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-4xl space-y-4"
+      >
         <Controller
           name="themeId"
           control={control}
@@ -81,13 +103,6 @@ export function PracticeScreen() {
           Get Question
         </Button>
       </form>
-
-      {questionMutation.data && (
-        <div className="mt-8 rounded-lg border p-6">
-          <h2 className="mb-4 text-xl font-semibold">Your Question:</h2>
-          <p className="text-lg">{questionMutation.data.question}</p>
-        </div>
-      )}
     </div>
   );
 }

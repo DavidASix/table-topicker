@@ -68,7 +68,7 @@ export default function PracticePage() {
     <div className="relative h-screen overflow-hidden">
       <div
         ref={containerRef}
-        className="hide-scrollbar flex h-full snap-x snap-mandatory overflow-x-scroll scroll-smooth"
+        className="hide-scrollbar flex h-full snap-x snap-mandatory overflow-x-scroll scroll-smooth pb-20"
       >
         {screens.map((screen) => {
           const ScreenComponent = screen.component;
@@ -78,7 +78,7 @@ export default function PracticePage() {
               id={screen.id}
               className={cn(
                 "flex flex-col items-center justify-start",
-                "min-h-screen w-screen shrink-0 snap-start overflow-x-clip overflow-y-auto",
+                "w-screen shrink-0 snap-start overflow-x-clip overflow-y-auto",
                 "py-4",
               )}
             >
