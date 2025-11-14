@@ -17,6 +17,7 @@ export const env = createEnv({
     MAILER_ADDRESS: z.string().optional(),
     DOMAIN: z.string().url().optional(),
     DATABASE_URL: z.string().url(),
+    OPEN_AI_API_KEY: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -43,6 +44,7 @@ export const env = createEnv({
     MAILER_ADDRESS: process.env.MAILER_ADDRESS,
     DOMAIN: process.env.DOMAIN,
     DATABASE_URL: process.env.DATABASE_URL,
+    OPEN_AI_API_KEY: process.env.OPEN_AI_API_KEY,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**
