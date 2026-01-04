@@ -7,7 +7,7 @@ import { z } from "zod";
 import { CheckCircle, XCircle, Mail } from "lucide-react";
 
 import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { Spinner } from "~/components/ui/spinner";
 import {
   Card,
@@ -148,20 +148,17 @@ export default function Home() {
                 )}
               </Button>
               {failedAttempts >= 2 && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  className="w-full"
-                  asChild
+                <a
+                  href={`mailto:${helpEmail}?subject=${encodeURIComponent("Bug Report: Login Issue")}&body=${encodeURIComponent(`I am experiencing issues logging in.\n\nEmail attempted: ${submittedEmail}\nError message: ${errorMessage}\n\nPlease help!`)}`}
+                  className={buttonVariants({
+                    variant: "outline",
+                    size: "lg",
+                    className: "w-full",
+                  })}
                 >
-                  <a
-                    href={`mailto:${helpEmail}?subject=${encodeURIComponent("Bug Report: Login Issue")}&body=${encodeURIComponent(`I am experiencing issues logging in.\n\nEmail attempted: ${submittedEmail}\nError message: ${errorMessage}\n\nPlease help!`)}`}
-                  >
-                    <Mail className="mr-2 h-4 w-4" />
-                    Report Login Issue
-                  </a>
-                </Button>
+                  <Mail className="mr-2 h-4 w-4" />
+                  Report Login Issue
+                </a>
               )}
               <p className="text-muted-foreground text-center text-xs">
                 We&apos;ll send you a secure link to access your account

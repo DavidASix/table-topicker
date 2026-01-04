@@ -113,7 +113,7 @@ export function PracticeScreen() {
                   disabled={themes.isLoading}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a theme" />
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {themes?.data?.map((theme) => (

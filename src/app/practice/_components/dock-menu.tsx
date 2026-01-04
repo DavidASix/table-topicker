@@ -2,7 +2,7 @@
 
 import { cn } from "~/lib/utils";
 import { screens } from "../page";
-import { Button } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 
 export function DockMenu({ activeScreenId }: { activeScreenId: string }) {
   return (
@@ -17,17 +17,19 @@ export function DockMenu({ activeScreenId }: { activeScreenId: string }) {
         const isActive = activeScreenId === screen.id;
 
         return (
-          <Button
-            asChild
-            size="icon-lg"
+          <a
             key={screen.id}
-            className="rounded-full"
-            variant={isActive ? "default" : "outline"}
+            href={`#${screen.id}`}
+            className={cn(
+              buttonVariants({
+                size: "icon-lg",
+                variant: isActive ? "default" : "outline",
+              }),
+              "rounded-full",
+            )}
           >
-            <a href={`#${screen.id}`}>
-              <Icon className="h-5 w-5" />
-            </a>
-          </Button>
+            <Icon className="h-5 w-5" />
+          </a>
         );
       })}
     </div>
