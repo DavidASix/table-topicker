@@ -4,7 +4,7 @@ import { contentTypeEnum } from "../common";
 
 export const themes = pgTable("themes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  title: text("title"),
+  title: text("title").notNull(),
   type: contentTypeEnum("type").notNull().default("user"),
   created_by: uuid("created_by").references(() => users.id),
   created_at: timestamp("created_at", { withTimezone: true })

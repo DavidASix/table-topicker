@@ -16,7 +16,7 @@ export const questions = pgTable("questions", {
     .notNull()
     .references(() => themes.id),
   type: contentTypeEnum("type").notNull().default("user"),
-  question: text("question"),
+  question: text("question").notNull(),
   difficulty: difficultyLevels("difficulty").notNull().default("easy"),
   created_by: uuid("created_by").references(() => users.id),
   created_at: timestamp("created_at", { withTimezone: true })
