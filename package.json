@@ -21,6 +21,7 @@
     "db:production:migrate": "tsx src/scripts/migrate-production.ts"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.66",
     "@auth/drizzle-adapter": "^1.7.2",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-label": "^2.1.8",
@@ -32,6 +33,7 @@
     "@trpc/client": "^11.0.0",
     "@trpc/react-query": "^11.0.0",
     "@trpc/server": "^11.0.0",
+    "ai": "^5.0.93",
     "axios": "^1.13.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
