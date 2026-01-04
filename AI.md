@@ -16,8 +16,14 @@ See @README.md for project overview and @package.json
 - **Avoid `as unknown as Type`** - indicates wrong approach
 - **Avoid `as Type`** - also indicates wrong approach
 
+### Type Conventions
+- If a function has more than 23 arguments (named or unnamed) declare the type for the arguments as a type above the function and use that type as the argument type for the function.
+
 ### Strings
 When writing site contents, respect eslintreact/no-unescaped-entities. This is a requirement. Escape chars like &apos; should be used instead of `'`.
+
+### Components
+- Where possible, always prefer leaning on ShadCN components over writing your own. This ensures consistency across the app.
 
 ## Tools
 
