@@ -3,6 +3,7 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Geist } from "next/font/google";
+import HolyLoader from "holy-loader";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/theme-provider";
@@ -25,6 +26,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
+      <HolyLoader color="var(--accent)" height={4} />
       <SessionProvider>
         <body className="flex min-h-screen flex-col">
           <TRPCReactProvider>
