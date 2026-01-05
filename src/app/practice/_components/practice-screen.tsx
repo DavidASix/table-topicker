@@ -42,6 +42,9 @@ export function PracticeScreen() {
     formState: { errors },
   } = useForm<PracticeFormValues>({
     resolver: zodResolver(practiceFormSchema),
+    defaultValues: {
+      themeId: "",
+    },
   });
 
   const {
@@ -50,6 +53,9 @@ export function PracticeScreen() {
     formState: { errors: aiErrors },
   } = useForm<AIFormValues>({
     resolver: zodResolver(aiFormSchema),
+    defaultValues: {
+      theme: "",
+    },
   });
 
   const questionMutation = api.questions.selectRandomByTheme.useMutation();
