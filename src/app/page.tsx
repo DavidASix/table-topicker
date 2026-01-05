@@ -62,20 +62,43 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-muted/30 px-4 py-16 md:py-24">
+      <section className="bg-muted/30 overflow-x-hidden px-4 py-16 md:py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-              Everything You Need to <span className="text-primary">Level</span>{" "}
-              <span className="text-accent">Up</span>
-            </h2>
-            <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-              Whether you&apos;re preparing for a contest or just practicing to
-              stay sharp, TableTopicker can help!
-            </p>
+          <div className="flex items-center justify-between gap-8">
+            {/* Left Mikey - visible on large screens */}
+            <div className="relative hidden h-48 w-48 shrink-0 sm:block lg:hidden">
+              <Image
+                src="/mikey-watch-tall.webp"
+                alt="Mikey holding a stopwatch for timed practice"
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            <div className="mb-12 flex-1 text-center">
+              <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+                Everything You Need to{" "}
+                <span className="text-primary">Level</span>{" "}
+                <span className="text-accent">Up</span>
+              </h2>
+              <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+                Whether you&apos;re preparing for a contest or just practicing
+                to stay sharp, TableTopicker can help!
+              </p>
+            </div>
+
+            {/* Right Mikey - visible on large screens */}
+            <div className="relative hidden h-48 w-48 shrink-0 sm:block lg:hidden">
+              <Image
+                src="/mikey-idea.webp"
+                alt="Mikey with a lightbulb idea for AI-generated topics"
+                fill
+                className="-scale-x-100 object-contain"
+              />
+            </div>
           </div>
 
-          <div className="grid gap-6 overflow-visible md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 overflow-visible lg:grid-cols-3">
             <Card className="group border-primary/20 relative overflow-visible transition-all hover:scale-[1.0025] hover:shadow-lg">
               <CardHeader className="relative z-10">
                 <div className="bg-primary/10 mb-4 flex h-16 w-16 items-center justify-center rounded-2xl">
@@ -87,7 +110,7 @@ export default async function Home() {
                   notifiers. Speak concisely and confidently.
                 </CardDescription>
               </CardHeader>
-              <div className="absolute bottom-0 left-0 h-72 w-72 -translate-x-[70%]">
+              <div className="absolute bottom-0 left-0 hidden h-72 w-72 -translate-x-[70%] lg:block">
                 <Image
                   src="/mikey-watch-tall.webp"
                   alt="Mikey holding a stopwatch for timed practice"
@@ -125,7 +148,7 @@ export default async function Home() {
                   Unlimited questions for any theme you can imagine.
                 </CardDescription>
               </CardHeader>
-              <div className="absolute right-0 -bottom-10 h-72 w-72 translate-x-[70%]">
+              <div className="absolute right-0 -bottom-10 hidden h-72 w-72 translate-x-[70%] lg:block">
                 <Image
                   src="/mikey-idea.webp"
                   alt="Mikey with a lightbulb idea for AI-generated topics"
