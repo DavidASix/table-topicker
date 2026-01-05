@@ -8,6 +8,7 @@ import HolyLoader from "holy-loader";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ThemeProvider } from "~/components/theme-provider";
 import { Navigation } from "~/components/navigation";
+import { Footer } from "~/components/footer";
 
 export const metadata: Metadata = {
   title: "TableTopicker - Practice Impromptu Speaking",
@@ -38,6 +39,7 @@ export default function RootLayout({
             >
               <Navigation />
               <main className="flex-1">{children}</main>
+              <Footer />
             </ThemeProvider>
           </TRPCReactProvider>
         </body>
