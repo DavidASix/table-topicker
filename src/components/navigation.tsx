@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
@@ -21,12 +21,6 @@ export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: session } = useSession();
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  // Prevent hydration mismatch for theme-dependent UI
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Scroll detection
   useEffect(() => {
@@ -70,20 +64,18 @@ export function Navigation() {
             </Link> */}
 
             {/* Theme Toggle */}
-            {mounted && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                aria-label="Toggle theme"
-              >
-                {theme === "light" ? (
-                  <Moon className="h-5 w-5" />
-                ) : (
-                  <Sun className="h-5 w-5" />
-                )}
-              </Button>
-            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
 
             {/* Auth Section */}
             {/* {session ? (
@@ -116,20 +108,18 @@ export function Navigation() {
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
             {/* Mobile Theme Toggle */}
-            {mounted && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleTheme}
-                aria-label="Toggle theme"
-              >
-                {theme === "light" ? (
-                  <Moon className="h-5 w-5" />
-                ) : (
-                  <Sun className="h-5 w-5" />
-                )}
-              </Button>
-            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === "light" ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
 
             {/* <Button
               variant="ghost"
