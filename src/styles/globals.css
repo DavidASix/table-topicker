@@ -121,7 +121,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 scroll-smooth;
   }
   body {
     @apply bg-background text-foreground;
@@ -169,10 +169,10 @@
       transform: rotate(0deg);
     }
     25% {
-      transform: rotate(-2deg);
+      transform: rotate(-0.25deg);
     }
     75% {
-      transform: rotate(2deg);
+      transform: rotate(0.25deg);
     }
   }
 

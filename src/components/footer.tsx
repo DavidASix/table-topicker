@@ -30,12 +30,12 @@ export function Footer() {
               >
                 Home
               </Link>
-              <Link
+              {/* <Link
                 href="/practice"
                 className="text-primary-foreground/80 hover:text-primary-foreground text-sm transition-colors"
               >
                 Practice
-              </Link>
+              </Link> */}
             </div>
           </div>
 
@@ -44,20 +44,20 @@ export function Footer() {
               More
             </h3>
             <div className="flex flex-col space-y-2">
-              <Link
+              {/* <Link
                 href="/privacy"
                 className="text-primary-foreground/80 hover:text-primary-foreground text-sm transition-colors"
               >
                 Privacy Policy
-              </Link>
-              <a
+              </Link> */}
+              <Link
                 href="https://davidasix.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-accent text-sm transition-colors"
               >
                 Built by davidasix
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, TrendingUp, Sparkles, Star } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -10,6 +10,8 @@ import {
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { HydrateClient } from "~/trpc/server";
+import WaitListForm from "~/app/_components/loops-waitlist-form";
+import { cn } from "~/lib/utils";
 
 export default async function Home() {
   return (
@@ -26,20 +28,12 @@ export default async function Home() {
                 Practice table-topics and hone your skills. Track your progress
                 and build confidence with timed speaking sessions.
               </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Link href="/practice">
-                  <Button size="lg" className="hover-wobble w-full sm:w-auto">
-                    Try It Now
-                  </Button>
-                </Link>
-                <Link href="/login">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full sm:w-auto"
-                  >
-                    Create Account
-                  </Button>
+              <div className="hidden justify-start md:flex">
+                <Link
+                  href="#waitlist"
+                  className={cn(buttonVariants({ size: "lg" }), "hover-wobble")}
+                >
+                  Get Started
                 </Link>
               </div>
             </div>
@@ -58,6 +52,20 @@ export default async function Home() {
               <Star className="text-accent absolute top-8 right-8 h-6 w-6 animate-pulse" />
               <Star className="text-accent absolute bottom-12 left-8 h-4 w-4 animate-pulse delay-75" />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-background px-4 py-16 md:py-24" id="waitlist">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="mb-6 text-3xl font-bold md:text-4xl">
+            Join the <span className="text-primary">Waitlist</span>
+          </h2>
+          <p className="text-muted-foreground mb-8 text-lg">
+            Be the first to know when we launch TableTopicker
+          </p>
+          <div className="mx-auto max-w-md">
+            <WaitListForm />
           </div>
         </div>
       </section>
@@ -170,10 +178,11 @@ export default async function Home() {
             something you should <span className="text-accent">practice</span>.
           </h2>
 
-          <Link href="/practice">
-            <Button size="lg" className="hover-wobble h-14 w-72 text-2xl">
-              Get Started
-            </Button>
+          <Link
+            href="#waitlist"
+            className={cn(buttonVariants({ size: "lg" }), "hover-wobble")}
+          >
+            Get Started
           </Link>
         </div>
       </section>
