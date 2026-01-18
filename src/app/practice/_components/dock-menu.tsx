@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "~/lib/utils";
-import { screens } from "../page";
-import { buttonVariants } from "~/components/ui/button";
+// import { screens } from "../page";
+// import { buttonVariants } from "~/components/ui/button";
 
 export function DockMenu({ activeScreenId }: { activeScreenId: string }) {
   return (
@@ -12,7 +12,7 @@ export function DockMenu({ activeScreenId }: { activeScreenId: string }) {
         "border-border fixed inset-x-0 bottom-0 left-1/2 z-50 w-min -translate-1/2 rounded-full border px-2.5 py-1.5 backdrop-blur-lg",
       )}
     >
-      {screens.map((screen) => {
+      {/* {screens.map((screen) => {
         const Icon = screen.icon;
         const isActive = activeScreenId === screen.id;
 
@@ -31,7 +31,7 @@ export function DockMenu({ activeScreenId }: { activeScreenId: string }) {
             <Icon className="h-5 w-5" />
           </a>
         );
-      })}
+      })} */}
     </div>
   );
 }

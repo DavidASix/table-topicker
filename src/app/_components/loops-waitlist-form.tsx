@@ -187,10 +187,7 @@ export default function WaitListForm() {
 
   function SignUpFormButton() {
     return (
-      <Button
-        type="submit"
-        disabled={formState === SUBMITTING}
-      >
+      <Button type="submit" disabled={formState === SUBMITTING}>
         {formState === SUBMITTING ? "Please wait..." : formStyles.buttonText}
       </Button>
     );
