@@ -23,7 +23,7 @@ const formStyles = {
 };
 const domain = "app.loops.so";
 
-export default function SignUpFormReact() {
+export default function WaitListForm() {
   const [email, setEmail] = useState("");
   const [formState, setFormState] = useState<(typeof formStates)[number]>(INIT);
   const [errorMessage, setErrorMessage] = useState("");
@@ -190,7 +190,6 @@ export default function SignUpFormReact() {
       <Button
         type="submit"
         disabled={formState === SUBMITTING}
-        className="w-full sm:w-auto"
       >
         {formState === SUBMITTING ? "Please wait..." : formStyles.buttonText}
       </Button>

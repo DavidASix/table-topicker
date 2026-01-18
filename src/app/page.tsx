@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, TrendingUp, Sparkles, Star } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -10,7 +10,8 @@ import {
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { HydrateClient } from "~/trpc/server";
-import SignUpFormReact from "~/app/_components/loops-waitlist-form";
+import WaitListForm from "~/app/_components/loops-waitlist-form";
+import { cn } from "~/lib/utils";
 
 export default async function Home() {
   return (
@@ -27,11 +28,12 @@ export default async function Home() {
                 Practice table-topics and hone your skills. Track your progress
                 and build confidence with timed speaking sessions.
               </p>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Link href="#waitlist">
-                  <Button size="lg" className="hover-wobble w-full sm:w-auto">
-                    Get Started
-                  </Button>
+              <div className="hidden justify-start md:flex">
+                <Link
+                  href="#waitlist"
+                  className={cn(buttonVariants({ size: "lg" }), "hover-wobble")}
+                >
+                  Get Started
                 </Link>
               </div>
             </div>
@@ -60,10 +62,10 @@ export default async function Home() {
             Join the <span className="text-primary">Waitlist</span>
           </h2>
           <p className="text-muted-foreground mb-8 text-lg">
-            Be the first to know when we launch new features and updates.
+            Be the first to know when we launch TableTopicker
           </p>
           <div className="mx-auto max-w-md">
-            <SignUpFormReact />
+            <WaitListForm />
           </div>
         </div>
       </section>
@@ -176,10 +178,11 @@ export default async function Home() {
             something you should <span className="text-accent">practice</span>.
           </h2>
 
-          <Link href="#waitlist">
-            <Button size="lg" className="hover-wobble h-14 w-72 text-2xl">
-              Get Started
-            </Button>
+          <Link
+            href="#waitlist"
+            className={cn(buttonVariants({ size: "lg" }), "hover-wobble")}
+          >
+            Get Started
           </Link>
         </div>
       </section>
