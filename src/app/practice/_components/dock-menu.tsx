@@ -4,6 +4,7 @@ import { cn } from "~/lib/utils";
 // import { screens } from "../page";
 // import { buttonVariants } from "~/components/ui/button";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function DockMenu({ activeScreenId }: { activeScreenId: string }) {
   return (
     <div

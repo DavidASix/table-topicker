@@ -8,6 +8,7 @@ const INIT = "INIT";
 const SUBMITTING = "SUBMITTING";
 const ERROR = "ERROR";
 const SUCCESS = "SUCCESS";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formStates = [INIT, SUBMITTING, ERROR, SUCCESS] as const;
 const formStyles = {
   id: "cmka5bpaq4l9n0iyohs0tlush",
@@ -27,7 +28,6 @@ export default function WaitListForm() {
   const [email, setEmail] = useState("");
   const [formState, setFormState] = useState<(typeof formStates)[number]>(INIT);
   const [errorMessage, setErrorMessage] = useState("");
-  const [fields, setFields] = useState<Record<string, string>>({});
 
   const resetForm = () => {
     setEmail("");
@@ -72,17 +72,6 @@ export default function WaitListForm() {
     if (hasRecentSubmission()) return;
     setFormState(SUBMITTING);
 
-    // build additional fields
-    const additionalFields = Object.entries(fields).reduce(
-      (acc, [key, val]) => {
-        if (val) {
-          return acc + "&" + key + "=" + encodeURIComponent(val);
-        }
-        return acc;
-      },
-      "",
-    );
-
     // build body
     const formBody = `userGroup=${encodeURIComponent(
       formStyles.userGroup,
@@ -91,7 +80,7 @@ export default function WaitListForm() {
     // API request to add user to newsletter
     fetch(`https://${domain}/api/newsletter-form/${formStyles.id}`, {
       method: "POST",
-      body: formBody + additionalFields,
+      body: formBody,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -102,7 +91,7 @@ export default function WaitListForm() {
           resetForm();
           setFormState(SUCCESS);
         } else {
-          dataPromise.then((data: { message?: string }) => {
+          void dataPromise.then((data: { message?: string }) => {
             setFormState(ERROR);
             setErrorMessage(data.message ?? res.statusText);
             localStorage.setItem("loops-form-timestamp", "");
@@ -122,8 +111,6 @@ export default function WaitListForm() {
         localStorage.setItem("loops-form-timestamp", "");
       });
   };
-
-  const isInline = formStyles.formStyle === "inline";
 
   switch (formState) {
     case SUCCESS:
