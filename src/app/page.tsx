@@ -28,18 +28,9 @@ export default async function Home() {
                 and build confidence with timed speaking sessions.
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
-                <Link href="/practice">
+                <Link href="#waitlist">
                   <Button size="lg" className="hover-wobble w-full sm:w-auto">
-                    Try It Now
-                  </Button>
-                </Link>
-                <Link href="/login">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full sm:w-auto"
-                  >
-                    Create Account
+                    Get Started
                   </Button>
                 </Link>
               </div>
@@ -63,7 +54,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-background px-4 py-16 md:py-24">
+      <section className="bg-background px-4 py-16 md:py-24" id="waitlist">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="mb-6 text-3xl font-bold md:text-4xl">
             Join the <span className="text-primary">Waitlist</span>
@@ -185,7 +176,7 @@ export default async function Home() {
             something you should <span className="text-accent">practice</span>.
           </h2>
 
-          <Link href="/practice">
+          <Link href="#waitlist">
             <Button size="lg" className="hover-wobble h-14 w-72 text-2xl">
               Get Started
             </Button>
