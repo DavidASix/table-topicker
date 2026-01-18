@@ -10,6 +10,7 @@ import {
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { HydrateClient } from "~/trpc/server";
+import SignUpFormReact from "~/app/_components/loops-waitlist-form";
 
 export default async function Home() {
   return (
@@ -58,6 +59,20 @@ export default async function Home() {
               <Star className="text-accent absolute top-8 right-8 h-6 w-6 animate-pulse" />
               <Star className="text-accent absolute bottom-12 left-8 h-4 w-4 animate-pulse delay-75" />
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-background px-4 py-16 md:py-24">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="mb-6 text-3xl font-bold md:text-4xl">
+            Join the <span className="text-primary">Waitlist</span>
+          </h2>
+          <p className="text-muted-foreground mb-8 text-lg">
+            Be the first to know when we launch new features and updates.
+          </p>
+          <div className="mx-auto max-w-md">
+            <SignUpFormReact />
           </div>
         </div>
       </section>
