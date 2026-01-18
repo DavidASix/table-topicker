@@ -62,12 +62,12 @@ export function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden items-center space-x-8 md:flex">
-            <Link
+            {/* <Link
               href="/practice"
               className="text-foreground hover:text-primary transition-colors"
             >
               Practice
-            </Link>
+            </Link> */}
 
             {/* Theme Toggle */}
             {mounted && (
@@ -86,7 +86,7 @@ export function Navigation() {
             )}
 
             {/* Auth Section */}
-            {session ? (
+            {/* {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 transition-colors">
                   <User className="h-4 w-4" />
@@ -110,7 +110,7 @@ export function Navigation() {
               <Link href="/login">
                 <Button>Sign In</Button>
               </Link>
-            )}
+            )} */}
           </div>
 
           {/* Mobile Menu Button */}
@@ -131,7 +131,7 @@ export function Navigation() {
               </Button>
             )}
 
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -142,12 +142,12 @@ export function Navigation() {
               ) : (
                 <Menu className="h-6 w-6" />
               )}
-            </Button>
+            </Button> */}
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && (
+        {/* {isMobileMenuOpen && (
           <div className="border-t py-4 md:hidden">
             <div className="flex flex-col space-y-4">
               <Link
@@ -182,7 +182,7 @@ export function Navigation() {
               )}
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </nav>
   );
